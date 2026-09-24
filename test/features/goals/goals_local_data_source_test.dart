@@ -32,24 +32,24 @@ void main() {
   });
 
   FinancialGoal createSampleGoal1() => FinancialGoal(
-        id: 'goal-1',
-        name: 'Emergency Fund',
-        targetAmountInCents: 500000,
-        savedAmountInCents: 100000,
-        createdAt: DateTime(2026, 1, 1),
-        updatedAt: DateTime(2026, 1, 1),
-        userId: 'user-a',
-      );
+    id: 'goal-1',
+    name: 'Emergency Fund',
+    targetAmountInCents: 500000,
+    savedAmountInCents: 100000,
+    createdAt: DateTime(2026, 1, 1),
+    updatedAt: DateTime(2026, 1, 1),
+    userId: 'user-a',
+  );
 
   FinancialGoal createSampleGoal2() => FinancialGoal(
-        id: 'goal-2',
-        name: 'New Car',
-        targetAmountInCents: 1500000,
-        savedAmountInCents: 250000,
-        createdAt: DateTime(2026, 1, 2),
-        updatedAt: DateTime(2026, 1, 2),
-        userId: 'user-b',
-      );
+    id: 'goal-2',
+    name: 'New Car',
+    targetAmountInCents: 1500000,
+    savedAmountInCents: 250000,
+    createdAt: DateTime(2026, 1, 2),
+    updatedAt: DateTime(2026, 1, 2),
+    userId: 'user-b',
+  );
 
   test('saveGoal, getGoal, and containsGoal work properly', () async {
     expect(await dataSource.containsGoal('goal-1'), isFalse);

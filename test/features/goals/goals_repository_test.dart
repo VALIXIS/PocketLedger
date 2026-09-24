@@ -36,16 +36,16 @@ void main() {
   });
 
   FinancialGoal createSampleGoal() => FinancialGoal(
-        id: 'goal-100',
-        name: 'Home Renovation',
-        description: 'Kitchen and living room remodel',
-        targetAmountInCents: 2000000,
-        savedAmountInCents: 500000,
-        targetDate: DateTime(2027, 1, 1),
-        createdAt: DateTime(2026, 1, 1),
-        updatedAt: DateTime(2026, 1, 1),
-        userId: 'user-vip',
-      );
+    id: 'goal-100',
+    name: 'Home Renovation',
+    description: 'Kitchen and living room remodel',
+    targetAmountInCents: 2000000,
+    savedAmountInCents: 500000,
+    targetDate: DateTime(2027, 1, 1),
+    createdAt: DateTime(2026, 1, 1),
+    updatedAt: DateTime(2026, 1, 1),
+    userId: 'user-vip',
+  );
 
   test('addGoal stores a new goal successfully', () async {
     final sampleGoal = createSampleGoal();
@@ -63,10 +63,7 @@ void main() {
     await repository.addGoal(sampleGoal);
 
     final duplicateGoal = createSampleGoal();
-    expect(
-      () => repository.addGoal(duplicateGoal),
-      throwsStateError,
-    );
+    expect(() => repository.addGoal(duplicateGoal), throwsStateError);
   });
 
   test('updateGoal modifies existing goal successfully', () async {
@@ -86,10 +83,7 @@ void main() {
 
   test('updateGoal throws StateError when goal does not exist', () async {
     final sampleGoal = createSampleGoal();
-    expect(
-      () => repository.updateGoal(sampleGoal),
-      throwsStateError,
-    );
+    expect(() => repository.updateGoal(sampleGoal), throwsStateError);
   });
 
   test('getAllGoals and getGoalsForUser return filtered results', () async {

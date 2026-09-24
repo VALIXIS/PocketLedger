@@ -39,19 +39,19 @@ void main() {
   });
 
   RecurringTransaction createSampleRecurring() => RecurringTransaction(
-        id: 'sub-aws-1',
-        name: 'AWS Cloud Hosting',
-        amountInCents: 4500,
-        isIncome: false,
-        category: 'bills',
-        recurrenceType: RecurrenceType.monthly,
-        startDate: DateTime(2026, 1, 1),
-        nextOccurrence: DateTime(2026, 9, 15),
-        status: RecurringTransactionStatus.active,
-        createdAt: DateTime(2026, 1, 1),
-        updatedAt: DateTime(2026, 1, 1),
-        userId: 'user-cloud',
-      );
+    id: 'sub-aws-1',
+    name: 'AWS Cloud Hosting',
+    amountInCents: 4500,
+    isIncome: false,
+    category: 'bills',
+    recurrenceType: RecurrenceType.monthly,
+    startDate: DateTime(2026, 1, 1),
+    nextOccurrence: DateTime(2026, 9, 15),
+    status: RecurringTransactionStatus.active,
+    createdAt: DateTime(2026, 1, 1),
+    updatedAt: DateTime(2026, 1, 1),
+    userId: 'user-cloud',
+  );
 
   test('addRecurringTransaction stores a record successfully', () async {
     final sample = createSampleRecurring();

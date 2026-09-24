@@ -35,46 +35,46 @@ void main() {
   });
 
   RecurringTransaction createActiveDueTx() => RecurringTransaction(
-        id: 'rec-1',
-        name: 'Netflix Subscription',
-        amountInCents: 1599,
-        category: 'entertainment',
-        recurrenceType: RecurrenceType.monthly,
-        startDate: DateTime(2026, 1, 1),
-        nextOccurrence: DateTime(2026, 9, 20),
-        status: RecurringTransactionStatus.active,
-        createdAt: DateTime(2026, 1, 1),
-        updatedAt: DateTime(2026, 1, 1),
-        userId: 'user-alpha',
-      );
+    id: 'rec-1',
+    name: 'Netflix Subscription',
+    amountInCents: 1599,
+    category: 'entertainment',
+    recurrenceType: RecurrenceType.monthly,
+    startDate: DateTime(2026, 1, 1),
+    nextOccurrence: DateTime(2026, 9, 20),
+    status: RecurringTransactionStatus.active,
+    createdAt: DateTime(2026, 1, 1),
+    updatedAt: DateTime(2026, 1, 1),
+    userId: 'user-alpha',
+  );
 
   RecurringTransaction createActiveFutureTx() => RecurringTransaction(
-        id: 'rec-2',
-        name: 'Spotify Family',
-        amountInCents: 1999,
-        category: 'entertainment',
-        recurrenceType: RecurrenceType.monthly,
-        startDate: DateTime(2026, 1, 1),
-        nextOccurrence: DateTime(2026, 9, 30),
-        status: RecurringTransactionStatus.active,
-        createdAt: DateTime(2026, 1, 1),
-        updatedAt: DateTime(2026, 1, 1),
-        userId: 'user-beta',
-      );
+    id: 'rec-2',
+    name: 'Spotify Family',
+    amountInCents: 1999,
+    category: 'entertainment',
+    recurrenceType: RecurrenceType.monthly,
+    startDate: DateTime(2026, 1, 1),
+    nextOccurrence: DateTime(2026, 9, 30),
+    status: RecurringTransactionStatus.active,
+    createdAt: DateTime(2026, 1, 1),
+    updatedAt: DateTime(2026, 1, 1),
+    userId: 'user-beta',
+  );
 
   RecurringTransaction createPausedTx() => RecurringTransaction(
-        id: 'rec-3',
-        name: 'Gym Membership',
-        amountInCents: 4500,
-        category: 'health',
-        recurrenceType: RecurrenceType.monthly,
-        startDate: DateTime(2026, 1, 1),
-        nextOccurrence: DateTime(2026, 9, 15),
-        status: RecurringTransactionStatus.paused,
-        createdAt: DateTime(2026, 1, 1),
-        updatedAt: DateTime(2026, 1, 1),
-        userId: 'user-alpha',
-      );
+    id: 'rec-3',
+    name: 'Gym Membership',
+    amountInCents: 4500,
+    category: 'health',
+    recurrenceType: RecurrenceType.monthly,
+    startDate: DateTime(2026, 1, 1),
+    nextOccurrence: DateTime(2026, 9, 15),
+    status: RecurringTransactionStatus.paused,
+    createdAt: DateTime(2026, 1, 1),
+    updatedAt: DateTime(2026, 1, 1),
+    userId: 'user-alpha',
+  );
 
   test('save, get, and contains work correctly', () async {
     expect(await dataSource.containsRecurringTransaction('rec-1'), isFalse);
@@ -115,9 +115,15 @@ void main() {
   test(
     'getDueTransactions retrieves only active transactions on or before asOf date',
     () async {
-      await dataSource.saveRecurringTransaction(createActiveDueTx()); // due Sept 20
-      await dataSource.saveRecurringTransaction(createActiveFutureTx()); // due Sept 30
-      await dataSource.saveRecurringTransaction(createPausedTx()); // paused Sept 15
+      await dataSource.saveRecurringTransaction(
+        createActiveDueTx(),
+      ); // due Sept 20
+      await dataSource.saveRecurringTransaction(
+        createActiveFutureTx(),
+      ); // due Sept 30
+      await dataSource.saveRecurringTransaction(
+        createPausedTx(),
+      ); // paused Sept 15
 
       final asOfDate = DateTime(2026, 9, 24);
       final due = await dataSource.getDueTransactions(asOfDate);
