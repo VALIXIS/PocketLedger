@@ -323,16 +323,14 @@ class GoalCard extends ConsumerWidget {
                         : '${CurrencyFormatter.formatCents(goal.remainingAmountInCents, currency)} remaining',
                     style: TextStyle(
                       fontSize: 13,
-                      fontWeight:
-                          goal.isCompleted
-                              ? FontWeight.bold
-                              : FontWeight.w500,
-                      color:
-                          goal.isCompleted
-                              ? Colors.green.shade600
-                              : (isDark
-                                  ? Colors.grey.shade400
-                                  : Colors.grey.shade700),
+                      fontWeight: goal.isCompleted
+                          ? FontWeight.bold
+                          : FontWeight.w500,
+                      color: goal.isCompleted
+                          ? Colors.green.shade600
+                          : (isDark
+                                ? Colors.grey.shade400
+                                : Colors.grey.shade700),
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -366,9 +364,7 @@ class GoalCard extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Flexible(
-                  child: GoalMilestoneBadge(progress: goal.progress),
-                ),
+                Flexible(child: GoalMilestoneBadge(progress: goal.progress)),
                 const SizedBox(width: 8),
                 ElevatedButton.icon(
                   onPressed: () => ContributionModal.show(context, goal),

@@ -43,18 +43,11 @@ class FakeGoalsRepository implements GoalsRepository {
   Future<bool> containsGoal(String id) async => goals.containsKey(id);
 }
 
-Widget createTestApp({
-  required Widget child,
-  FakeGoalsRepository? repository,
-}) {
+Widget createTestApp({required Widget child, FakeGoalsRepository? repository}) {
   final repo = repository ?? FakeGoalsRepository();
   return ProviderScope(
-    overrides: [
-      goalsRepositoryProvider.overrideWithValue(repo),
-    ],
-    child: MaterialApp(
-      home: Scaffold(body: child),
-    ),
+    overrides: [goalsRepositoryProvider.overrideWithValue(repo)],
+    child: MaterialApp(home: Scaffold(body: child)),
   );
 }
 
@@ -185,11 +178,10 @@ void main() {
         createTestApp(
           repository: repo,
           child: Builder(
-            builder:
-                (ctx) => ElevatedButton(
-                  onPressed: () => ContributionModal.show(ctx, goal),
-                  child: const Text('Open Modal'),
-                ),
+            builder: (ctx) => ElevatedButton(
+              onPressed: () => ContributionModal.show(ctx, goal),
+              child: const Text('Open Modal'),
+            ),
           ),
         ),
       );
@@ -255,11 +247,10 @@ void main() {
         createTestApp(
           repository: repo,
           child: Builder(
-            builder:
-                (ctx) => ElevatedButton(
-                  onPressed: () => GoalForm.showAddGoal(ctx),
-                  child: const Text('Open Form'),
-                ),
+            builder: (ctx) => ElevatedButton(
+              onPressed: () => GoalForm.showAddGoal(ctx),
+              child: const Text('Open Form'),
+            ),
           ),
         ),
       );
@@ -319,11 +310,10 @@ void main() {
         createTestApp(
           repository: repo,
           child: Builder(
-            builder:
-                (ctx) => ElevatedButton(
-                  onPressed: () => GoalForm.showEditGoal(ctx, goal),
-                  child: const Text('Edit Goal'),
-                ),
+            builder: (ctx) => ElevatedButton(
+              onPressed: () => GoalForm.showEditGoal(ctx, goal),
+              child: const Text('Edit Goal'),
+            ),
           ),
         ),
       );

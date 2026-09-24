@@ -42,12 +42,8 @@ class MockGoalsRepository implements GoalsRepository {
 
 Widget createGoalsScreenApp({required MockGoalsRepository repository}) {
   return ProviderScope(
-    overrides: [
-      goalsRepositoryProvider.overrideWithValue(repository),
-    ],
-    child: const MaterialApp(
-      home: FinancialGoalsScreen(),
-    ),
+    overrides: [goalsRepositoryProvider.overrideWithValue(repository)],
+    child: const MaterialApp(home: FinancialGoalsScreen()),
   );
 }
 
