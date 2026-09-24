@@ -101,8 +101,11 @@ class RecurringTransaction extends HiveObject {
     this.reminderDaysBefore = 3,
     this.merchantName = '',
     this.iconName = 'repeat',
-  })  : assert(amountInCents >= 0, 'Amount cannot be negative'),
-        assert(reminderDaysBefore >= 0, 'Reminder days before cannot be negative');
+  }) : assert(amountInCents >= 0, 'Amount cannot be negative'),
+       assert(
+         reminderDaysBefore >= 0,
+         'Reminder days before cannot be negative',
+       );
 
   /// Helper to convert double amount to integer cents safely.
   static int doubleToCents(double amount) {
@@ -118,7 +121,11 @@ class RecurringTransaction extends HiveObject {
   /// Returns true if nextOccurrence has passed its end date.
   bool get hasEnded {
     if (endDate == null) return false;
-    final normalizedNext = DateTime(nextOccurrence.year, nextOccurrence.month, nextOccurrence.day);
+    final normalizedNext = DateTime(
+      nextOccurrence.year,
+      nextOccurrence.month,
+      nextOccurrence.day,
+    );
     final normalizedEnd = DateTime(endDate!.year, endDate!.month, endDate!.day);
     return normalizedNext.isAfter(normalizedEnd);
   }
@@ -147,9 +154,13 @@ class RecurringTransaction extends HiveObject {
   /// Advances to the next occurrence, updates status if past endDate, and updates updatedAt.
   RecurringTransaction advanceToNextOccurrence() {
     final next = calculateNextOccurrence();
-    final isPastEndDate = endDate != null &&
-        DateTime(next.year, next.month, next.day)
-            .isAfter(DateTime(endDate!.year, endDate!.month, endDate!.day));
+    final isPastEndDate =
+        endDate != null &&
+        DateTime(
+          next.year,
+          next.month,
+          next.day,
+        ).isAfter(DateTime(endDate!.year, endDate!.month, endDate!.day));
 
     return copyWith(
       nextOccurrence: next,
@@ -173,7 +184,11 @@ class RecurringTransaction extends HiveObject {
     if (!isActive) return false;
     if (!reminderEnabled) return false;
 
-    final targetDate = DateTime(nextOccurrence.year, nextOccurrence.month, nextOccurrence.day);
+    final targetDate = DateTime(
+      nextOccurrence.year,
+      nextOccurrence.month,
+      nextOccurrence.day,
+    );
     final currentDate = DateTime(date.year, date.month, date.day);
 
     final differenceInDays = targetDate.difference(currentDate).inDays;
@@ -245,7 +260,8 @@ class RecurringTransaction extends HiveObject {
 
   static int _daysInMonth(int year, int month) {
     if (month == 2) {
-      final isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+      final isLeapYear =
+          (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
       return isLeapYear ? 29 : 28;
     }
     const daysInMonths = [31, -1, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];

@@ -71,7 +71,10 @@ void main() {
 
       // Anomaly detection: food > 35% of total expenses
       expect(telemetry.anomalyAlerts.length, 1);
-      expect(telemetry.anomalyAlerts.first, contains('High category concentration'));
+      expect(
+        telemetry.anomalyAlerts.first,
+        contains('High category concentration'),
+      );
     });
   });
 }

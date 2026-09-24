@@ -68,8 +68,8 @@ class FinancialGoal extends HiveObject {
     this.iconName = 'savings',
     this.colorValue = 0xFF4CAF50,
     this.userId = '',
-  })  : assert(targetAmountInCents >= 0, 'Target amount cannot be negative'),
-        assert(savedAmountInCents >= 0, 'Saved amount cannot be negative');
+  }) : assert(targetAmountInCents >= 0, 'Target amount cannot be negative'),
+       assert(savedAmountInCents >= 0, 'Saved amount cannot be negative');
 
   /// Helper to convert double amount to integer cents safely.
   static int doubleToCents(double amount) {
@@ -105,7 +105,8 @@ class FinancialGoal extends HiveObject {
 
   /// A goal is completed when savedAmountInCents >= targetAmountInCents or its status is completed.
   bool get isCompleted =>
-      status == GoalStatus.completed || savedAmountInCents >= targetAmountInCents;
+      status == GoalStatus.completed ||
+      savedAmountInCents >= targetAmountInCents;
 
   /// Returns a copy of this FinancialGoal with updated fields.
   FinancialGoal copyWith({
@@ -175,7 +176,8 @@ class FinancialGoal extends HiveObject {
     final newSavedAmount = calculatedSaved < 0 ? 0 : calculatedSaved;
 
     GoalStatus newStatus = status;
-    if (status == GoalStatus.completed && newSavedAmount < targetAmountInCents) {
+    if (status == GoalStatus.completed &&
+        newSavedAmount < targetAmountInCents) {
       newStatus = GoalStatus.active;
     }
 

@@ -25,8 +25,8 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cardColor = color ??
-        (isDark ? const Color(0xFF1E262B) : Colors.white);
+    final cardColor =
+        color ?? (isDark ? const Color(0xFF1E262B) : Colors.white);
 
     Widget content = Container(
       padding: padding,
@@ -34,7 +34,8 @@ class CustomCard extends StatelessWidget {
         color: gradient == null ? cardColor : null,
         gradient: gradient,
         borderRadius: BorderRadius.circular(borderRadius),
-        border: border ??
+        border:
+            border ??
             Border.all(
               color: isDark
                   ? Colors.white.withValues(alpha: 0.06)

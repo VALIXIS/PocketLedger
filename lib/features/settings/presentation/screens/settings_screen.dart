@@ -111,18 +111,27 @@ class SettingsScreen extends ConsumerWidget {
                   contentPadding: EdgeInsets.zero,
                   leading: CircleAvatar(
                     backgroundColor: Colors.teal.withValues(alpha: 0.12),
-                    child: const Icon(Icons.dataset_outlined, color: Colors.teal),
+                    child: const Icon(
+                      Icons.dataset_outlined,
+                      color: Colors.teal,
+                    ),
                   ),
                   title: const Text('Seed Demo Transactions'),
-                  subtitle: const Text('Populate 12+ realistic sample transactions'),
+                  subtitle: const Text(
+                    'Populate 12+ realistic sample transactions',
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () async {
                     final count = await DemoDataSeeder.seedDemoData(repository);
-                    await ref.read(transactionListProvider.notifier).loadTransactions();
+                    await ref
+                        .read(transactionListProvider.notifier)
+                        .loadTransactions();
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Successfully seeded $count sample transactions!'),
+                          content: Text(
+                            'Successfully seeded $count sample transactions!',
+                          ),
                           backgroundColor: Colors.teal.shade700,
                         ),
                       );
@@ -134,17 +143,24 @@ class SettingsScreen extends ConsumerWidget {
                   contentPadding: EdgeInsets.zero,
                   leading: CircleAvatar(
                     backgroundColor: Colors.red.withValues(alpha: 0.12),
-                    child: const Icon(Icons.delete_sweep_outlined, color: Colors.red),
+                    child: const Icon(
+                      Icons.delete_sweep_outlined,
+                      color: Colors.red,
+                    ),
                   ),
                   title: const Text('Clear All Transactions'),
-                  subtitle: const Text('Reset local database to initial empty state'),
+                  subtitle: const Text(
+                    'Reset local database to initial empty state',
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {
                     showDialog(
                       context: context,
                       builder: (ctx) => AlertDialog(
                         title: const Text('Reset All Transactions?'),
-                        content: const Text('This will delete all stored transactions from Hive.'),
+                        content: const Text(
+                          'This will delete all stored transactions from Hive.',
+                        ),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(ctx).pop(),
@@ -154,14 +170,23 @@ class SettingsScreen extends ConsumerWidget {
                             onPressed: () async {
                               Navigator.of(ctx).pop();
                               await DemoDataSeeder.clearAllData(repository);
-                              await ref.read(transactionListProvider.notifier).loadTransactions();
+                              await ref
+                                  .read(transactionListProvider.notifier)
+                                  .loadTransactions();
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Database reset successfully!')),
+                                  const SnackBar(
+                                    content: Text(
+                                      'Database reset successfully!',
+                                    ),
+                                  ),
                                 );
                               }
                             },
-                            child: const Text('Reset', style: TextStyle(color: Colors.red)),
+                            child: const Text(
+                              'Reset',
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ),
                         ],
                       ),
@@ -189,10 +214,15 @@ class SettingsScreen extends ConsumerWidget {
                   contentPadding: EdgeInsets.zero,
                   leading: CircleAvatar(
                     backgroundColor: Colors.indigo.withValues(alpha: 0.12),
-                    child: const Icon(Icons.copy_all_outlined, color: Colors.indigo),
+                    child: const Icon(
+                      Icons.copy_all_outlined,
+                      color: Colors.indigo,
+                    ),
                   ),
                   title: const Text('Copy AI Health Report'),
-                  subtitle: const Text('Export telemetry summary to markdown format'),
+                  subtitle: const Text(
+                    'Export telemetry summary to markdown format',
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () async {
                     final txs = ref.read(transactionListProvider).value ?? [];
@@ -202,7 +232,9 @@ class SettingsScreen extends ConsumerWidget {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: const Text('AI Financial Report copied to clipboard!'),
+                          content: const Text(
+                            'AI Financial Report copied to clipboard!',
+                          ),
                           backgroundColor: Colors.indigo.shade700,
                         ),
                       );
@@ -234,16 +266,34 @@ class SettingsScreen extends ConsumerWidget {
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Version', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
-                    Text('1.0.0+1', style: TextStyle(fontSize: 15, color: Colors.grey)),
+                    Text(
+                      'Version',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      '1.0.0+1',
+                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Developer & Platform', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
-                    Text('VALIXIS', style: TextStyle(fontSize: 15, color: Colors.grey)),
+                    Text(
+                      'Developer & Platform',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      'VALIXIS',
+                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                    ),
                   ],
                 ),
               ],

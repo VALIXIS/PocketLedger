@@ -37,22 +37,25 @@ void main() {
       expect(goal.userId, 'user-123');
     });
 
-    test('2. Target amount is stored as integer cents without float inaccuracies', () {
-      final cents = FinancialGoal.doubleToCents(1234.56);
-      expect(cents, 123456);
+    test(
+      '2. Target amount is stored as integer cents without float inaccuracies',
+      () {
+        final cents = FinancialGoal.doubleToCents(1234.56);
+        expect(cents, 123456);
 
-      final goal = FinancialGoal(
-        id: 'goal-2',
-        name: 'Laptop',
-        targetAmountInCents: cents,
-        createdAt: baseCreatedAt,
-        updatedAt: baseUpdatedAt,
-      );
+        final goal = FinancialGoal(
+          id: 'goal-2',
+          name: 'Laptop',
+          targetAmountInCents: cents,
+          createdAt: baseCreatedAt,
+          updatedAt: baseUpdatedAt,
+        );
 
-      expect(goal.targetAmountInCents, isA<int>());
-      expect(goal.targetAmountInCents, 123456);
-      expect(goal.targetAmount, 1234.56);
-    });
+        expect(goal.targetAmountInCents, isA<int>());
+        expect(goal.targetAmountInCents, 123456);
+        expect(goal.targetAmount, 1234.56);
+      },
+    );
 
     test('3. Saved amount is stored as integer cents', () {
       final goal = FinancialGoal(
@@ -149,98 +152,114 @@ void main() {
       final updatedGoal = goal.addContribution(150000);
       expect(updatedGoal.savedAmountInCents, 350000);
       expect(updatedGoal.status, GoalStatus.active);
-      expect(updatedGoal.updatedAt.isAfter(initialTime) || updatedGoal.updatedAt == initialTime, isTrue);
-    });
-
-    test('9. Invalid contribution throws ArgumentError on zero or negative values', () {
-      final goal = FinancialGoal(
-        id: 'goal-9',
-        name: 'Education',
-        targetAmountInCents: 500000,
-        savedAmountInCents: 100000,
-        createdAt: baseCreatedAt,
-        updatedAt: baseUpdatedAt,
+      expect(
+        updatedGoal.updatedAt.isAfter(initialTime) ||
+            updatedGoal.updatedAt == initialTime,
+        isTrue,
       );
-
-      expect(() => goal.addContribution(0), throwsArgumentError);
-      expect(() => goal.addContribution(-500), throwsArgumentError);
-      expect(() => goal.removeContribution(0), throwsArgumentError);
-      expect(() => goal.removeContribution(-100), throwsArgumentError);
     });
 
-    test('10. Goal becomes completed after reaching or exceeding target amount', () {
-      final goal = FinancialGoal(
-        id: 'goal-10',
-        name: 'Headphones',
-        targetAmountInCents: 20000,
-        savedAmountInCents: 15000,
-        createdAt: baseCreatedAt,
-        updatedAt: baseUpdatedAt,
-        status: GoalStatus.active,
-      );
+    test(
+      '9. Invalid contribution throws ArgumentError on zero or negative values',
+      () {
+        final goal = FinancialGoal(
+          id: 'goal-9',
+          name: 'Education',
+          targetAmountInCents: 500000,
+          savedAmountInCents: 100000,
+          createdAt: baseCreatedAt,
+          updatedAt: baseUpdatedAt,
+        );
 
-      expect(goal.isCompleted, isFalse);
+        expect(() => goal.addContribution(0), throwsArgumentError);
+        expect(() => goal.addContribution(-500), throwsArgumentError);
+        expect(() => goal.removeContribution(0), throwsArgumentError);
+        expect(() => goal.removeContribution(-100), throwsArgumentError);
+      },
+    );
 
-      final completedGoal = goal.addContribution(5000);
-      expect(completedGoal.savedAmountInCents, 20000);
-      expect(completedGoal.status, GoalStatus.completed);
-      expect(completedGoal.isCompleted, isTrue);
+    test(
+      '10. Goal becomes completed after reaching or exceeding target amount',
+      () {
+        final goal = FinancialGoal(
+          id: 'goal-10',
+          name: 'Headphones',
+          targetAmountInCents: 20000,
+          savedAmountInCents: 15000,
+          createdAt: baseCreatedAt,
+          updatedAt: baseUpdatedAt,
+          status: GoalStatus.active,
+        );
 
-      final overCompletedGoal = goal.addContribution(10000);
-      expect(overCompletedGoal.savedAmountInCents, 25000);
-      expect(overCompletedGoal.status, GoalStatus.completed);
-      expect(overCompletedGoal.isCompleted, isTrue);
-    });
+        expect(goal.isCompleted, isFalse);
 
-    test('11. Removing contribution never creates a negative balance and adjusts status appropriately', () {
-      final completedGoal = FinancialGoal(
-        id: 'goal-11',
-        name: 'Course',
-        targetAmountInCents: 10000,
-        savedAmountInCents: 10000,
-        createdAt: baseCreatedAt,
-        updatedAt: baseUpdatedAt,
-        status: GoalStatus.completed,
-      );
+        final completedGoal = goal.addContribution(5000);
+        expect(completedGoal.savedAmountInCents, 20000);
+        expect(completedGoal.status, GoalStatus.completed);
+        expect(completedGoal.isCompleted, isTrue);
 
-      // Removing partial amount drops below target, reverting completed status to active
-      final revertedGoal = completedGoal.removeContribution(3000);
-      expect(revertedGoal.savedAmountInCents, 7000);
-      expect(revertedGoal.status, GoalStatus.active);
-      expect(revertedGoal.isCompleted, isFalse);
+        final overCompletedGoal = goal.addContribution(10000);
+        expect(overCompletedGoal.savedAmountInCents, 25000);
+        expect(overCompletedGoal.status, GoalStatus.completed);
+        expect(overCompletedGoal.isCompleted, isTrue);
+      },
+    );
 
-      // Removing more than total saved clamps to 0
-      final drainedGoal = completedGoal.removeContribution(20000);
-      expect(drainedGoal.savedAmountInCents, 0);
-      expect(drainedGoal.status, GoalStatus.active);
-    });
+    test(
+      '11. Removing contribution never creates a negative balance and adjusts status appropriately',
+      () {
+        final completedGoal = FinancialGoal(
+          id: 'goal-11',
+          name: 'Course',
+          targetAmountInCents: 10000,
+          savedAmountInCents: 10000,
+          createdAt: baseCreatedAt,
+          updatedAt: baseUpdatedAt,
+          status: GoalStatus.completed,
+        );
 
-    test('12. copyWith preserves unchanged fields and supports clearing targetDate', () {
-      final goal = FinancialGoal(
-        id: 'goal-12',
-        name: 'House Downpayment',
-        description: 'Save 20%',
-        targetAmountInCents: 5000000,
-        savedAmountInCents: 1000000,
-        targetDate: DateTime(2028, 6, 30),
-        createdAt: baseCreatedAt,
-        updatedAt: baseUpdatedAt,
-        status: GoalStatus.active,
-        iconName: 'home',
-        colorValue: 0xFF2196F3,
-        userId: 'user-999',
-      );
+        // Removing partial amount drops below target, reverting completed status to active
+        final revertedGoal = completedGoal.removeContribution(3000);
+        expect(revertedGoal.savedAmountInCents, 7000);
+        expect(revertedGoal.status, GoalStatus.active);
+        expect(revertedGoal.isCompleted, isFalse);
 
-      final updatedName = goal.copyWith(name: 'Dream Home Downpayment');
-      expect(updatedName.name, 'Dream Home Downpayment');
-      expect(updatedName.targetAmountInCents, 5000000);
-      expect(updatedName.targetDate, DateTime(2028, 6, 30));
-      expect(updatedName.iconName, 'home');
+        // Removing more than total saved clamps to 0
+        final drainedGoal = completedGoal.removeContribution(20000);
+        expect(drainedGoal.savedAmountInCents, 0);
+        expect(drainedGoal.status, GoalStatus.active);
+      },
+    );
 
-      // Clear target date
-      final clearedDateGoal = goal.copyWith(clearTargetDate: true);
-      expect(clearedDateGoal.targetDate, isNull);
-      expect(clearedDateGoal.name, 'House Downpayment');
-    });
+    test(
+      '12. copyWith preserves unchanged fields and supports clearing targetDate',
+      () {
+        final goal = FinancialGoal(
+          id: 'goal-12',
+          name: 'House Downpayment',
+          description: 'Save 20%',
+          targetAmountInCents: 5000000,
+          savedAmountInCents: 1000000,
+          targetDate: DateTime(2028, 6, 30),
+          createdAt: baseCreatedAt,
+          updatedAt: baseUpdatedAt,
+          status: GoalStatus.active,
+          iconName: 'home',
+          colorValue: 0xFF2196F3,
+          userId: 'user-999',
+        );
+
+        final updatedName = goal.copyWith(name: 'Dream Home Downpayment');
+        expect(updatedName.name, 'Dream Home Downpayment');
+        expect(updatedName.targetAmountInCents, 5000000);
+        expect(updatedName.targetDate, DateTime(2028, 6, 30));
+        expect(updatedName.iconName, 'home');
+
+        // Clear target date
+        final clearedDateGoal = goal.copyWith(clearTargetDate: true);
+        expect(clearedDateGoal.targetDate, isNull);
+        expect(clearedDateGoal.name, 'House Downpayment');
+      },
+    );
   });
 }

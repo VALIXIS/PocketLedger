@@ -96,11 +96,15 @@ class FinancialContextEngine {
           ),
         );
       });
-      categorySummaries.sort((a, b) => b.totalInCents.compareTo(a.totalInCents));
+      categorySummaries.sort(
+        (a, b) => b.totalInCents.compareTo(a.totalInCents),
+      );
     }
 
     // Top 5 highest individual expenses
-    expenseTransactions.sort((a, b) => b.amountInCents.compareTo(a.amountInCents));
+    expenseTransactions.sort(
+      (a, b) => b.amountInCents.compareTo(a.amountInCents),
+    );
     final top5Expenses = expenseTransactions.take(5).map((tx) {
       return {
         'category': tx.category,
@@ -113,11 +117,15 @@ class FinancialContextEngine {
     // Detect anomalies
     final List<String> anomalies = [];
     if (expenseCents > incomeCents && incomeCents > 0) {
-      anomalies.add('Net deficit: Expenses exceed income by \$${((expenseCents - incomeCents) / 100.0).toStringAsFixed(2)}');
+      anomalies.add(
+        'Net deficit: Expenses exceed income by \$${((expenseCents - incomeCents) / 100.0).toStringAsFixed(2)}',
+      );
     }
     for (final cat in categorySummaries) {
       if (cat.percentageOfTotal > 35.0) {
-        anomalies.add('High category concentration: ${cat.categoryId} accounts for ${cat.percentageOfTotal.toStringAsFixed(1)}% of total expenses.');
+        anomalies.add(
+          'High category concentration: ${cat.categoryId} accounts for ${cat.percentageOfTotal.toStringAsFixed(1)}% of total expenses.',
+        );
       }
     }
 

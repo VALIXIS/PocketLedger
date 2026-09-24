@@ -71,9 +71,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
     }
 
     if (_selectedCategoryId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select a category')));
       return;
     }
 
@@ -87,7 +87,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
       category: _selectedCategoryId!,
       date: _selectedDate,
       note: _noteController.text.trim(),
-      createdAt: _isEditing ? widget.transactionToEdit!.createdAt : DateTime.now(),
+      createdAt: _isEditing
+          ? widget.transactionToEdit!.createdAt
+          : DateTime.now(),
     );
 
     final notifier = ref.read(transactionListProvider.notifier);
@@ -143,7 +145,9 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
                   .read(transactionListProvider.notifier)
                   .deleteTransaction(widget.transactionToEdit!.id)
                   .then((_) {
-                    if (mounted) Navigator.of(context).pop(); // return to dashboard
+                    if (mounted) {
+                      Navigator.of(context).pop(); // return to dashboard
+                    }
                   })
                   .catchError((error) {
                     if (mounted) {
