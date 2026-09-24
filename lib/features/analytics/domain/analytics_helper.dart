@@ -1,6 +1,7 @@
 import 'package:pocketledger/features/transactions/domain/models/transaction.dart';
 import 'package:pocketledger/features/transactions/domain/models/transaction_type.dart';
 import 'models/analytics_report.dart';
+import 'models/monthly_trend.dart';
 
 /// Pure Dart, stateless helper class for calculating financial analytics and telemetry metrics.
 class AnalyticsHelper {
@@ -144,6 +145,56 @@ class AnalyticsHelper {
     });
 
     return result;
+  }
+
+  /// Calculates monthly financial trends grouped by calendar month and sorted chronologically.
+  ///
+  /// Returns a list of [MonthlyTrend] objects containing income, expenses, and net cashflow per month.
+  static List<MonthlyTrend> calculateMonthlyTrends(
+    List<Transaction> transactions,
+  ) {
+    if (transactions.isEmpty) return const [];
+
+    final Map<String, _MonthlyTotals> grouped = {};
+
+    for (final tx in transactions) {
+      final key = '${tx.date.year}-${tx.date.month.toString().padLeft(2, '0')}';
+      final current = grouped.putIfAbsent(
+        key,
+        () => _MonthlyTotals(year: tx.date.year, month: tx.date.month),
+      );
+
+      if (tx.type == TransactionType.income) {
+        current.incomeCents += tx.amountInCents;
+      } else if (tx.type == TransactionType.expense) {
+        current.expenseCents += tx.amountInCents;
+      }
+    }
+
+    final List<MonthlyTrend> trends =
+        grouped.values.map((totals) {
+          final income = _sanitizeDouble(totals.incomeCents / 100.0);
+          final expenses = _sanitizeDouble(totals.expenseCents / 100.0);
+          final net = _sanitizeDouble(
+            (totals.incomeCents - totals.expenseCents) / 100.0,
+          );
+          return MonthlyTrend(
+            year: totals.year,
+            month: totals.month,
+            totalIncome: income,
+            totalExpenses: expenses,
+            netCashflow: net,
+          );
+        }).toList();
+
+    trends.sort((a, b) {
+      if (a.year != b.year) {
+        return a.year.compareTo(b.year);
+      }
+      return a.month.compareTo(b.month);
+    });
+
+    return trends;
   }
 
   /// Calculates period length in days.
@@ -341,4 +392,13 @@ class AnalyticsHelper {
     }
     return value;
   }
+}
+
+class _MonthlyTotals {
+  final int year;
+  final int month;
+  int incomeCents = 0;
+  int expenseCents = 0;
+
+  _MonthlyTotals({required this.year, required this.month});
 }
