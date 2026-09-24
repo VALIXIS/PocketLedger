@@ -53,13 +53,16 @@ class BudgetAlertEngine {
     String message;
     switch (level) {
       case BudgetAlertLevel.exceeded:
-        message = '${budget.name} budget exceeded! Spent \$$spentFormatted of \$$allocatedFormatted ($percentFormatted%)';
+        message =
+            '${budget.name} budget exceeded! Spent \$$spentFormatted of \$$allocatedFormatted ($percentFormatted%)';
         break;
       case BudgetAlertLevel.danger:
-        message = '${budget.name} budget critical! Spent \$$spentFormatted of \$$allocatedFormatted ($percentFormatted%)';
+        message =
+            '${budget.name} budget critical! Spent \$$spentFormatted of \$$allocatedFormatted ($percentFormatted%)';
         break;
       case BudgetAlertLevel.warning:
-        message = '${budget.name} budget warning! Spent \$$spentFormatted of \$$allocatedFormatted ($percentFormatted%)';
+        message =
+            '${budget.name} budget warning! Spent \$$spentFormatted of \$$allocatedFormatted ($percentFormatted%)';
         break;
       case BudgetAlertLevel.none:
         message = '${budget.name} budget is within normal limits';

@@ -29,17 +29,16 @@ void main() {
       theme: ThemeData(useMaterial3: true),
       home: Scaffold(
         body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: widget,
-          ),
+          child: Padding(padding: const EdgeInsets.all(16.0), child: widget),
         ),
       ),
     );
   }
 
   group('BudgetAlertBanner Widget Tests', () {
-    testWidgets('1. Renders warning alert banner with badge text WARNING 75%', (tester) async {
+    testWidgets('1. Renders warning alert banner with badge text WARNING 75%', (
+      tester,
+    ) async {
       final alert = createTestAlert(
         id: 'b1',
         name: 'Dining',
@@ -48,7 +47,9 @@ void main() {
         message: 'Dining budget warning! Spent \$78.00 of \$100.00 (78.0%)',
       );
 
-      await tester.pumpWidget(createWidgetUnderTest(BudgetAlertBanner(alert: alert)));
+      await tester.pumpWidget(
+        createWidgetUnderTest(BudgetAlertBanner(alert: alert)),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('WARNING 75%'), findsOneWidget);
@@ -56,7 +57,9 @@ void main() {
       expect(find.byIcon(Icons.warning_amber_rounded), findsOneWidget);
     });
 
-    testWidgets('2. Renders danger alert banner with badge text DANGER 90%', (tester) async {
+    testWidgets('2. Renders danger alert banner with badge text DANGER 90%', (
+      tester,
+    ) async {
       final alert = createTestAlert(
         id: 'b2',
         name: 'Travel',
@@ -65,7 +68,9 @@ void main() {
         message: 'Travel budget critical! Spent \$92.00 of \$100.00 (92.0%)',
       );
 
-      await tester.pumpWidget(createWidgetUnderTest(BudgetAlertBanner(alert: alert)));
+      await tester.pumpWidget(
+        createWidgetUnderTest(BudgetAlertBanner(alert: alert)),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('DANGER 90%'), findsOneWidget);
@@ -73,24 +78,32 @@ void main() {
       expect(find.byIcon(Icons.error_outline_rounded), findsOneWidget);
     });
 
-    testWidgets('3. Renders exceeded alert banner with badge text EXCEEDED 100%', (tester) async {
-      final alert = createTestAlert(
-        id: 'b3',
-        name: 'Groceries',
-        level: BudgetAlertLevel.exceeded,
-        percentage: 110.0,
-        message: 'Groceries budget exceeded! Spent \$110.00 of \$100.00 (110.0%)',
-      );
+    testWidgets(
+      '3. Renders exceeded alert banner with badge text EXCEEDED 100%',
+      (tester) async {
+        final alert = createTestAlert(
+          id: 'b3',
+          name: 'Groceries',
+          level: BudgetAlertLevel.exceeded,
+          percentage: 110.0,
+          message:
+              'Groceries budget exceeded! Spent \$110.00 of \$100.00 (110.0%)',
+        );
 
-      await tester.pumpWidget(createWidgetUnderTest(BudgetAlertBanner(alert: alert)));
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          createWidgetUnderTest(BudgetAlertBanner(alert: alert)),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('EXCEEDED 100%'), findsOneWidget);
-      expect(find.text('Groceries'), findsOneWidget);
-      expect(find.byIcon(Icons.gpp_maybe_rounded), findsOneWidget);
-    });
+        expect(find.text('EXCEEDED 100%'), findsOneWidget);
+        expect(find.text('Groceries'), findsOneWidget);
+        expect(find.byIcon(Icons.gpp_maybe_rounded), findsOneWidget);
+      },
+    );
 
-    testWidgets('4. Displays message and LinearProgressIndicator', (tester) async {
+    testWidgets('4. Displays message and LinearProgressIndicator', (
+      tester,
+    ) async {
       final alert = createTestAlert(
         id: 'b1',
         name: 'Bills',
@@ -99,14 +112,18 @@ void main() {
         message: 'Bills budget warning!',
       );
 
-      await tester.pumpWidget(createWidgetUnderTest(BudgetAlertBanner(alert: alert)));
+      await tester.pumpWidget(
+        createWidgetUnderTest(BudgetAlertBanner(alert: alert)),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Bills budget warning!'), findsOneWidget);
       expect(find.byType(LinearProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('5. Triggers onDismiss callback when close button is tapped', (tester) async {
+    testWidgets('5. Triggers onDismiss callback when close button is tapped', (
+      tester,
+    ) async {
       bool dismissed = false;
       final alert = createTestAlert(
         id: 'b1',
@@ -137,7 +154,9 @@ void main() {
       expect(dismissed, isTrue);
     });
 
-    testWidgets('6. Triggers onTap callback when banner card is tapped', (tester) async {
+    testWidgets('6. Triggers onTap callback when banner card is tapped', (
+      tester,
+    ) async {
       bool tapped = false;
       final alert = createTestAlert(
         id: 'b1',
@@ -165,13 +184,29 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('7. BudgetAlertSection renders multiple active alert banners', (tester) async {
+    testWidgets('7. BudgetAlertSection renders multiple active alert banners', (
+      tester,
+    ) async {
       final alerts = [
-        createTestAlert(id: 'a1', name: 'Alert 1', level: BudgetAlertLevel.exceeded, percentage: 105.0, message: 'Exceeded'),
-        createTestAlert(id: 'a2', name: 'Alert 2', level: BudgetAlertLevel.warning, percentage: 80.0, message: 'Warning'),
+        createTestAlert(
+          id: 'a1',
+          name: 'Alert 1',
+          level: BudgetAlertLevel.exceeded,
+          percentage: 105.0,
+          message: 'Exceeded',
+        ),
+        createTestAlert(
+          id: 'a2',
+          name: 'Alert 2',
+          level: BudgetAlertLevel.warning,
+          percentage: 80.0,
+          message: 'Warning',
+        ),
       ];
 
-      await tester.pumpWidget(createWidgetUnderTest(BudgetAlertSection(alerts: alerts)));
+      await tester.pumpWidget(
+        createWidgetUnderTest(BudgetAlertSection(alerts: alerts)),
+      );
       await tester.pumpAndSettle();
 
       expect(find.byType(BudgetAlertBanner), findsNWidgets(2));
@@ -179,39 +214,66 @@ void main() {
       expect(find.text('Alert 2'), findsOneWidget);
     });
 
-    testWidgets('8. BudgetAlertSection renders empty widget when alerts list is empty', (tester) async {
-      await tester.pumpWidget(createWidgetUnderTest(const BudgetAlertSection(alerts: [])));
-      await tester.pumpAndSettle();
+    testWidgets(
+      '8. BudgetAlertSection renders empty widget when alerts list is empty',
+      (tester) async {
+        await tester.pumpWidget(
+          createWidgetUnderTest(const BudgetAlertSection(alerts: [])),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.byType(BudgetAlertBanner), findsNothing);
-      expect(find.byKey(const Key('budget_alert_section')), findsNothing);
-    });
+        expect(find.byType(BudgetAlertBanner), findsNothing);
+        expect(find.byKey(const Key('budget_alert_section')), findsNothing);
+      },
+    );
 
-    testWidgets('9. BudgetAlertSection displays total count of active alerts in header text', (tester) async {
-      final alerts = [
-        createTestAlert(id: 'a1', name: 'A1', level: BudgetAlertLevel.danger, percentage: 92.0, message: 'D1'),
-        createTestAlert(id: 'a2', name: 'A2', level: BudgetAlertLevel.warning, percentage: 76.0, message: 'W1'),
-      ];
+    testWidgets(
+      '9. BudgetAlertSection displays total count of active alerts in header text',
+      (tester) async {
+        final alerts = [
+          createTestAlert(
+            id: 'a1',
+            name: 'A1',
+            level: BudgetAlertLevel.danger,
+            percentage: 92.0,
+            message: 'D1',
+          ),
+          createTestAlert(
+            id: 'a2',
+            name: 'A2',
+            level: BudgetAlertLevel.warning,
+            percentage: 76.0,
+            message: 'W1',
+          ),
+        ];
 
-      await tester.pumpWidget(createWidgetUnderTest(BudgetAlertSection(alerts: alerts)));
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          createWidgetUnderTest(BudgetAlertSection(alerts: alerts)),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Active Budget Alerts (2)'), findsOneWidget);
-    });
+        expect(find.text('Active Budget Alerts (2)'), findsOneWidget);
+      },
+    );
 
-    testWidgets('10. Renders correctly without dismiss button when onDismiss is null', (tester) async {
-      final alert = createTestAlert(
-        id: 'b1',
-        name: 'Utilities',
-        level: BudgetAlertLevel.warning,
-        percentage: 82.0,
-        message: 'Warning',
-      );
+    testWidgets(
+      '10. Renders correctly without dismiss button when onDismiss is null',
+      (tester) async {
+        final alert = createTestAlert(
+          id: 'b1',
+          name: 'Utilities',
+          level: BudgetAlertLevel.warning,
+          percentage: 82.0,
+          message: 'Warning',
+        );
 
-      await tester.pumpWidget(createWidgetUnderTest(BudgetAlertBanner(alert: alert)));
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          createWidgetUnderTest(BudgetAlertBanner(alert: alert)),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.byKey(const Key('dismiss_alert_b1')), findsNothing);
-    });
+        expect(find.byKey(const Key('dismiss_alert_b1')), findsNothing);
+      },
+    );
   });
 }

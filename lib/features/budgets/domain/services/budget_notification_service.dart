@@ -30,7 +30,8 @@ class BudgetNotificationService {
   }
 
   /// Unmodifiable history of emitted notification payloads.
-  List<BudgetNotificationPayload> get notificationLog => List.unmodifiable(_notificationLog);
+  List<BudgetNotificationPayload> get notificationLog =>
+      List.unmodifiable(_notificationLog);
 
   /// Retrieves the recorded alert level for a given [budgetId].
   BudgetAlertLevel getLastNotifiedLevel(String budgetId) {
@@ -56,7 +57,8 @@ class BudgetNotificationService {
     }
 
     // If level de-escalated back to none, reset tracked state
-    if (alert.level == BudgetAlertLevel.none && prevLevel != BudgetAlertLevel.none) {
+    if (alert.level == BudgetAlertLevel.none &&
+        prevLevel != BudgetAlertLevel.none) {
       _lastNotifiedLevels[alert.budgetId] = BudgetAlertLevel.none;
     }
 

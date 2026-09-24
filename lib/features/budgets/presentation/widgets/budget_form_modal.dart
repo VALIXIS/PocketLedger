@@ -85,7 +85,9 @@ class _BudgetFormModalState extends ConsumerState<BudgetFormModal> {
     final amountInCents = (amountDouble * 100).round();
 
     final budget = Budget(
-      id: widget.existingBudget?.id ?? 'budget_${DateTime.now().millisecondsSinceEpoch}',
+      id:
+          widget.existingBudget?.id ??
+          'budget_${DateTime.now().millisecondsSinceEpoch}',
       name: _nameController.text.trim(),
       amountInCents: amountInCents,
       period: _selectedPeriod,
@@ -192,7 +194,9 @@ class _BudgetFormModalState extends ConsumerState<BudgetFormModal> {
               const SizedBox(height: 12),
               TextFormField(
                 controller: _amountController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Allocation Amount (₹)',
                   hintText: 'e.g. 10000',

@@ -16,14 +16,20 @@ class BudgetListScreen extends ConsumerWidget {
     final txState = ref.watch(transactionListProvider);
     return txState.maybeWhen(
       data: (transactions) {
-        final range = BudgetPacingEngine.getActivePeriodRange(budget, DateTime.now());
+        final range = BudgetPacingEngine.getActivePeriodRange(
+          budget,
+          DateTime.now(),
+        );
         int total = 0;
         for (var tx in transactions) {
           if (tx.type.name == 'expense') {
-            if (budget.categoryId.isNotEmpty && tx.category != budget.categoryId) {
+            if (budget.categoryId.isNotEmpty &&
+                tx.category != budget.categoryId) {
               continue;
             }
-            if (tx.date.isAfter(range.start.subtract(const Duration(seconds: 1))) &&
+            if (tx.date.isAfter(
+                  range.start.subtract(const Duration(seconds: 1)),
+                ) &&
                 tx.date.isBefore(range.end)) {
               total += tx.amountInCents;
             }
@@ -155,7 +161,9 @@ class BudgetListScreen extends ConsumerWidget {
                       'Create a weekly, monthly, or yearly budget to track your spending and prevent blowouts.',
                       textAlign: TextAlign.center,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                        color: theme.textTheme.bodyMedium?.color?.withValues(
+                          alpha: 0.7,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -174,7 +182,9 @@ class BudgetListScreen extends ConsumerWidget {
 
           return RefreshIndicator(
             onRefresh: () async {
-              await ref.read(budgetListNotifierProvider.notifier).refreshBudgets();
+              await ref
+                  .read(budgetListNotifierProvider.notifier)
+                  .refreshBudgets();
             },
             child: ListView.builder(
               padding: const EdgeInsets.all(16.0),
@@ -193,7 +203,10 @@ class BudgetListScreen extends ConsumerWidget {
                   spentInCents: spentInCents,
                 );
 
-                final statusColor = _getStatusColor(pacing.status, theme.colorScheme);
+                final statusColor = _getStatusColor(
+                  pacing.status,
+                  theme.colorScheme,
+                );
                 final statusLabel = _getStatusLabel(pacing.status);
 
                 return Card(
@@ -201,7 +214,10 @@ class BudgetListScreen extends ConsumerWidget {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(18),
                     onTap: () {
-                      Navigator.push(context, BudgetDetailScreen.route(budget.id));
+                      Navigator.push(
+                        context,
+                        BudgetDetailScreen.route(budget.id),
+                      );
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -228,7 +244,9 @@ class BudgetListScreen extends ConsumerWidget {
                                 decoration: BoxDecoration(
                                   color: statusColor.withValues(alpha: 0.12),
                                   borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: statusColor.withValues(alpha: 0.5)),
+                                  border: Border.all(
+                                    color: statusColor.withValues(alpha: 0.5),
+                                  ),
                                 ),
                                 child: Text(
                                   statusLabel,
@@ -245,7 +263,9 @@ class BudgetListScreen extends ConsumerWidget {
                             children: [
                               Chip(
                                 labelPadding: EdgeInsets.zero,
-                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
                                 label: Text(
                                   budget.period.name.toUpperCase(),
                                   style: const TextStyle(fontSize: 11),
@@ -255,7 +275,9 @@ class BudgetListScreen extends ConsumerWidget {
                                 const SizedBox(width: 8),
                                 Chip(
                                   labelPadding: EdgeInsets.zero,
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
                                   label: Text(
                                     budget.categoryId,
                                     style: const TextStyle(fontSize: 11),
@@ -270,7 +292,8 @@ class BudgetListScreen extends ConsumerWidget {
                             spentInCents: spentInCents,
                             allocatedInCents: budget.amountInCents,
                             progressColor: statusColor,
-                            subtitle: 'Pacing: ${(pacing.elapsedFraction * 100).round()}% elapsed',
+                            subtitle:
+                                'Pacing: ${(pacing.elapsedFraction * 100).round()}% elapsed',
                           ),
                         ],
                       ),

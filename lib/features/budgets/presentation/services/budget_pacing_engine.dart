@@ -1,11 +1,6 @@
 import '../../domain/entities/budget.dart';
 
-enum BudgetPacingStatus {
-  onTrack,
-  warning,
-  projectedToExceed,
-  exceeded,
-}
+enum BudgetPacingStatus { onTrack, warning, projectedToExceed, exceeded }
 
 class BudgetPacingResult {
   final int budgetAmountInCents;
@@ -50,7 +45,8 @@ class BudgetPacingEngine {
     final periodStart = periodRange.start;
     final periodEnd = periodRange.end;
 
-    final totalDurationMs = periodEnd.millisecondsSinceEpoch - periodStart.millisecondsSinceEpoch;
+    final totalDurationMs =
+        periodEnd.millisecondsSinceEpoch - periodStart.millisecondsSinceEpoch;
     final totalDays = (totalDurationMs / (1000 * 60 * 60 * 24)).ceil();
 
     // Days remaining calculation
@@ -68,7 +64,8 @@ class BudgetPacingEngine {
       } else if (now.isBefore(periodStart)) {
         elapsedFraction = 0.0;
       } else {
-        final elapsedMs = now.millisecondsSinceEpoch - periodStart.millisecondsSinceEpoch;
+        final elapsedMs =
+            now.millisecondsSinceEpoch - periodStart.millisecondsSinceEpoch;
         elapsedFraction = elapsedMs / totalDurationMs;
         if (elapsedFraction < 0.0) elapsedFraction = 0.0;
         if (elapsedFraction > 1.0) elapsedFraction = 1.0;
@@ -91,14 +88,18 @@ class BudgetPacingEngine {
         projectedRemainingInCents: 0,
         daysRemaining: daysRemaining,
         isProjectedToExceed: isExceeded,
-        status: isExceeded ? BudgetPacingStatus.exceeded : BudgetPacingStatus.onTrack,
+        status: isExceeded
+            ? BudgetPacingStatus.exceeded
+            : BudgetPacingStatus.onTrack,
       );
     }
 
     // Handle Completed Period or 100% Elapsed
     if (elapsedFraction >= 0.999 || !now.isBefore(periodEnd)) {
       final isExceeded = spentInCents > budgetCents;
-      final dailyRate = totalDays > 0 ? (spentInCents / totalDays).round() : spentInCents;
+      final dailyRate = totalDays > 0
+          ? (spentInCents / totalDays).round()
+          : spentInCents;
 
       return BudgetPacingResult(
         budgetAmountInCents: budgetCents,
@@ -110,7 +111,9 @@ class BudgetPacingEngine {
         projectedRemainingInCents: remainingInCents,
         daysRemaining: 0,
         isProjectedToExceed: isExceeded,
-        status: isExceeded ? BudgetPacingStatus.exceeded : BudgetPacingStatus.onTrack,
+        status: isExceeded
+            ? BudgetPacingStatus.exceeded
+            : BudgetPacingStatus.onTrack,
       );
     }
 
@@ -136,7 +139,9 @@ class BudgetPacingEngine {
 
     if (elapsedFraction < 0.01) {
       // Early period: avoid unstable projection values
-      projectedSpendInCents = spentInCents > budgetCents ? spentInCents : budgetCents;
+      projectedSpendInCents = spentInCents > budgetCents
+          ? spentInCents
+          : budgetCents;
       dailySpendRateInCents = 0;
     } else {
       projectedSpendInCents = (spentInCents / elapsedFraction).round();
@@ -211,7 +216,10 @@ class BudgetPacingEngine {
     }
   }
 
-  static DateTime getNextPeriodStartDate(DateTime startDate, BudgetPeriod period) {
+  static DateTime getNextPeriodStartDate(
+    DateTime startDate,
+    BudgetPeriod period,
+  ) {
     switch (period) {
       case BudgetPeriod.weekly:
         return startDate.add(const Duration(days: 7));
@@ -223,14 +231,32 @@ class BudgetPacingEngine {
           year++;
         }
         int lastDayOfNextMonth = DateTime(year, month + 1, 0).day;
-        int day = startDate.day > lastDayOfNextMonth ? lastDayOfNextMonth : startDate.day;
-        return DateTime(year, month, day, startDate.hour, startDate.minute, startDate.second);
+        int day = startDate.day > lastDayOfNextMonth
+            ? lastDayOfNextMonth
+            : startDate.day;
+        return DateTime(
+          year,
+          month,
+          day,
+          startDate.hour,
+          startDate.minute,
+          startDate.second,
+        );
       case BudgetPeriod.yearly:
         int year = startDate.year + 1;
         int month = startDate.month;
         int lastDayOfMonth = DateTime(year, month + 1, 0).day;
-        int day = startDate.day > lastDayOfMonth ? lastDayOfMonth : startDate.day;
-        return DateTime(year, month, day, startDate.hour, startDate.minute, startDate.second);
+        int day = startDate.day > lastDayOfMonth
+            ? lastDayOfMonth
+            : startDate.day;
+        return DateTime(
+          year,
+          month,
+          day,
+          startDate.hour,
+          startDate.minute,
+          startDate.second,
+        );
     }
   }
 }

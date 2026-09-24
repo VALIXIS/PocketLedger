@@ -22,19 +22,22 @@ void main() {
   });
 
   group('Budget Rollover Logic Unit Tests', () {
-    test('Test 1 — Partial spending: 10000 budget - 7500 spent = 2500 rollover', () {
-      final budget = Budget(
-        id: 'b1',
-        name: 'Dining',
-        amountInCents: 10000,
-        period: BudgetPeriod.monthly,
-        startDate: DateTime(2026, 1, 1),
-        rolloverEnabled: true,
-      );
+    test(
+      'Test 1 — Partial spending: 10000 budget - 7500 spent = 2500 rollover',
+      () {
+        final budget = Budget(
+          id: 'b1',
+          name: 'Dining',
+          amountInCents: 10000,
+          period: BudgetPeriod.monthly,
+          startDate: DateTime(2026, 1, 1),
+          rolloverEnabled: true,
+        );
 
-      final rollover = repository.calculateRolloverAmount(budget, 7500);
-      expect(rollover, equals(2500));
-    });
+        final rollover = repository.calculateRolloverAmount(budget, 7500);
+        expect(rollover, equals(2500));
+      },
+    );
 
     test('Test 2 — Fully spent: 10000 budget - 10000 spent = 0 rollover', () {
       final budget = Budget(
@@ -78,68 +81,80 @@ void main() {
       expect(rollover, equals(10000));
     });
 
-    test('Test 5 — Weekly budget rollover and start date calculation', () async {
-      final startDate = DateTime(2026, 1, 1);
-      final budget = Budget(
-        id: 'b_weekly',
-        name: 'Weekly Snacks',
-        amountInCents: 5000,
-        period: BudgetPeriod.weekly,
-        startDate: startDate,
-        rolloverEnabled: true,
-      );
+    test(
+      'Test 5 — Weekly budget rollover and start date calculation',
+      () async {
+        final startDate = DateTime(2026, 1, 1);
+        final budget = Budget(
+          id: 'b_weekly',
+          name: 'Weekly Snacks',
+          amountInCents: 5000,
+          period: BudgetPeriod.weekly,
+          startDate: startDate,
+          rolloverEnabled: true,
+        );
 
-      final nextBudget = await repository.rolloverBudget(
-        budget: budget,
-        spentAmountInCents: 2000, // unused 3000
-      );
+        final nextBudget = await repository.rolloverBudget(
+          budget: budget,
+          spentAmountInCents: 2000, // unused 3000
+        );
 
-      expect(nextBudget.period, equals(BudgetPeriod.weekly));
-      expect(nextBudget.amountInCents, equals(8000)); // 5000 + 3000
-      expect(nextBudget.startDate, equals(startDate.add(const Duration(days: 7))));
-    });
+        expect(nextBudget.period, equals(BudgetPeriod.weekly));
+        expect(nextBudget.amountInCents, equals(8000)); // 5000 + 3000
+        expect(
+          nextBudget.startDate,
+          equals(startDate.add(const Duration(days: 7))),
+        );
+      },
+    );
 
-    test('Test 6 — Monthly budget rollover and start date calculation', () async {
-      final startDate = DateTime(2026, 1, 15);
-      final budget = Budget(
-        id: 'b_monthly',
-        name: 'Monthly Groceries',
-        amountInCents: 40000,
-        period: BudgetPeriod.monthly,
-        startDate: startDate,
-        rolloverEnabled: true,
-      );
+    test(
+      'Test 6 — Monthly budget rollover and start date calculation',
+      () async {
+        final startDate = DateTime(2026, 1, 15);
+        final budget = Budget(
+          id: 'b_monthly',
+          name: 'Monthly Groceries',
+          amountInCents: 40000,
+          period: BudgetPeriod.monthly,
+          startDate: startDate,
+          rolloverEnabled: true,
+        );
 
-      final nextBudget = await repository.rolloverBudget(
-        budget: budget,
-        spentAmountInCents: 30000, // unused 10000
-      );
+        final nextBudget = await repository.rolloverBudget(
+          budget: budget,
+          spentAmountInCents: 30000, // unused 10000
+        );
 
-      expect(nextBudget.period, equals(BudgetPeriod.monthly));
-      expect(nextBudget.amountInCents, equals(50000)); // 40000 + 10000
-      expect(nextBudget.startDate, equals(DateTime(2026, 2, 15)));
-    });
+        expect(nextBudget.period, equals(BudgetPeriod.monthly));
+        expect(nextBudget.amountInCents, equals(50000)); // 40000 + 10000
+        expect(nextBudget.startDate, equals(DateTime(2026, 2, 15)));
+      },
+    );
 
-    test('Test 7 — Yearly budget rollover and start date calculation', () async {
-      final startDate = DateTime(2026, 3, 1);
-      final budget = Budget(
-        id: 'b_yearly',
-        name: 'Annual Vacation',
-        amountInCents: 120000,
-        period: BudgetPeriod.yearly,
-        startDate: startDate,
-        rolloverEnabled: true,
-      );
+    test(
+      'Test 7 — Yearly budget rollover and start date calculation',
+      () async {
+        final startDate = DateTime(2026, 3, 1);
+        final budget = Budget(
+          id: 'b_yearly',
+          name: 'Annual Vacation',
+          amountInCents: 120000,
+          period: BudgetPeriod.yearly,
+          startDate: startDate,
+          rolloverEnabled: true,
+        );
 
-      final nextBudget = await repository.rolloverBudget(
-        budget: budget,
-        spentAmountInCents: 50000, // unused 70000
-      );
+        final nextBudget = await repository.rolloverBudget(
+          budget: budget,
+          spentAmountInCents: 50000, // unused 70000
+        );
 
-      expect(nextBudget.period, equals(BudgetPeriod.yearly));
-      expect(nextBudget.amountInCents, equals(190000)); // 120000 + 70000
-      expect(nextBudget.startDate, equals(DateTime(2027, 3, 1)));
-    });
+        expect(nextBudget.period, equals(BudgetPeriod.yearly));
+        expect(nextBudget.amountInCents, equals(190000)); // 120000 + 70000
+        expect(nextBudget.startDate, equals(DateTime(2027, 3, 1)));
+      },
+    );
 
     test('Test 8 — Integer precision with non-round cent values', () {
       final budget = Budget(

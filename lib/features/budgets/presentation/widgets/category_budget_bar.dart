@@ -30,12 +30,13 @@ class CategoryBudgetBar extends StatelessWidget {
     }
 
     final isExceeded = spentInCents > allocatedInCents;
-    final activeColor = progressColor ??
+    final activeColor =
+        progressColor ??
         (isExceeded
             ? theme.colorScheme.error
             : (progress > 0.85
-                ? Colors.orange.shade700
-                : theme.colorScheme.primary));
+                  ? Colors.orange.shade700
+                  : theme.colorScheme.primary));
 
     final remainingCents = allocatedInCents - spentInCents;
     final remainingAmount = remainingCents / 100.0;
@@ -72,7 +73,9 @@ class CategoryBudgetBar extends StatelessWidget {
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 10,
-              backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.12),
+              backgroundColor: theme.colorScheme.primary.withValues(
+                alpha: 0.12,
+              ),
               valueColor: AlwaysStoppedAnimation<Color>(activeColor),
             ),
           ),
@@ -84,7 +87,9 @@ class CategoryBudgetBar extends StatelessWidget {
                 Text(
                   subtitle!,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                    color: theme.textTheme.bodySmall?.color?.withValues(
+                      alpha: 0.7,
+                    ),
                   ),
                 )
               else
@@ -97,7 +102,9 @@ class CategoryBudgetBar extends StatelessWidget {
                   color: remainingCents >= 0
                       ? theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7)
                       : theme.colorScheme.error,
-                  fontWeight: remainingCents < 0 ? FontWeight.bold : FontWeight.normal,
+                  fontWeight: remainingCents < 0
+                      ? FontWeight.bold
+                      : FontWeight.normal,
                 ),
               ),
             ],

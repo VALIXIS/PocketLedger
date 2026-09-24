@@ -3,25 +3,28 @@ import 'package:pocketledger/features/budgets/domain/entities/budget.dart';
 
 void main() {
   group('Budget Domain Entity Tests', () {
-    test('creates Budget with required parameters and correct default values', () {
-      final startDate = DateTime(2026, 1, 1);
-      final budget = Budget(
-        id: 'b1',
-        name: 'Groceries',
-        amountInCents: 50000, // $500.00
-        period: BudgetPeriod.monthly,
-        startDate: startDate,
-      );
+    test(
+      'creates Budget with required parameters and correct default values',
+      () {
+        final startDate = DateTime(2026, 1, 1);
+        final budget = Budget(
+          id: 'b1',
+          name: 'Groceries',
+          amountInCents: 50000, // $500.00
+          period: BudgetPeriod.monthly,
+          startDate: startDate,
+        );
 
-      expect(budget.id, equals('b1'));
-      expect(budget.name, equals('Groceries'));
-      expect(budget.amountInCents, equals(50000));
-      expect(budget.amount, equals(500.0));
-      expect(budget.period, equals(BudgetPeriod.monthly));
-      expect(budget.startDate, equals(startDate));
-      expect(budget.categoryId, equals(''));
-      expect(budget.rolloverEnabled, isFalse);
-    });
+        expect(budget.id, equals('b1'));
+        expect(budget.name, equals('Groceries'));
+        expect(budget.amountInCents, equals(50000));
+        expect(budget.amount, equals(500.0));
+        expect(budget.period, equals(BudgetPeriod.monthly));
+        expect(budget.startDate, equals(startDate));
+        expect(budget.categoryId, equals(''));
+        expect(budget.rolloverEnabled, isFalse);
+      },
+    );
 
     test('converts double amount to cents correctly', () {
       expect(Budget.doubleToCents(49.99), equals(4999));
@@ -30,11 +33,14 @@ void main() {
     });
 
     test('supports all budget periods', () {
-      expect(BudgetPeriod.values, containsAll([
-        BudgetPeriod.weekly,
-        BudgetPeriod.monthly,
-        BudgetPeriod.yearly,
-      ]));
+      expect(
+        BudgetPeriod.values,
+        containsAll([
+          BudgetPeriod.weekly,
+          BudgetPeriod.monthly,
+          BudgetPeriod.yearly,
+        ]),
+      );
     });
 
     test('copyWith creates a new updated instance', () {

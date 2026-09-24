@@ -81,10 +81,7 @@ class BudgetAlertBanner extends StatelessWidget {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(
-          color: fgColor.withValues(alpha: 0.3),
-          width: 1.0,
-        ),
+        border: Border.all(color: fgColor.withValues(alpha: 0.3), width: 1.0),
       ),
       child: Material(
         color: Colors.transparent,
@@ -96,11 +93,7 @@ class BudgetAlertBanner extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  icon,
-                  color: fgColor,
-                  size: 28,
-                ),
+                Icon(icon, color: fgColor, size: 28),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -109,7 +102,10 @@ class BudgetAlertBanner extends StatelessWidget {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
                               color: fgColor.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(6),
@@ -146,7 +142,10 @@ class BudgetAlertBanner extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(4),
                         child: LinearProgressIndicator(
-                          value: (alert.percentageSpent / 100.0).clamp(0.0, 1.0),
+                          value: (alert.percentageSpent / 100.0).clamp(
+                            0.0,
+                            1.0,
+                          ),
                           color: fgColor,
                           backgroundColor: fgColor.withValues(alpha: 0.2),
                           minHeight: 6,
@@ -209,9 +208,9 @@ class BudgetAlertSection extends StatelessWidget {
               Text(
                 'Active Budget Alerts (${alerts.length})',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ],
           ),
@@ -219,7 +218,9 @@ class BudgetAlertSection extends StatelessWidget {
         ...alerts.map(
           (alert) => BudgetAlertBanner(
             alert: alert,
-            onDismiss: onAlertDismissed != null ? () => onAlertDismissed!(alert) : null,
+            onDismiss: onAlertDismissed != null
+                ? () => onAlertDismissed!(alert)
+                : null,
             onTap: onAlertTap != null ? () => onAlertTap!(alert) : null,
           ),
         ),

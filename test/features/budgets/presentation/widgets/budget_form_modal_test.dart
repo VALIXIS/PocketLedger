@@ -40,11 +40,12 @@ class MockBudgetRepository implements BudgetRepository {
 }
 
 void main() {
-  Widget buildTestableWidget(Widget child, {required MockBudgetRepository repo}) {
+  Widget buildTestableWidget(
+    Widget child, {
+    required MockBudgetRepository repo,
+  }) {
     return ProviderScope(
-      overrides: [
-        budgetRepositoryProvider.overrideWithValue(repo),
-      ],
+      overrides: [budgetRepositoryProvider.overrideWithValue(repo)],
       child: MaterialApp(
         theme: ThemeData(useMaterial3: true),
         home: Scaffold(body: child),
@@ -74,7 +75,10 @@ void main() {
       );
 
       await tester.pumpWidget(
-        buildTestableWidget(BudgetFormModal(existingBudget: existing), repo: repo),
+        buildTestableWidget(
+          BudgetFormModal(existingBudget: existing),
+          repo: repo,
+        ),
       );
 
       expect(find.text('Edit Budget'), findsOneWidget);

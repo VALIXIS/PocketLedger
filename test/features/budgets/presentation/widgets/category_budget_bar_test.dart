@@ -7,10 +7,7 @@ void main() {
     return MaterialApp(
       theme: ThemeData(useMaterial3: true),
       home: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: child,
-        ),
+        body: Padding(padding: const EdgeInsets.all(16.0), child: child),
       ),
     );
   }
@@ -37,7 +34,9 @@ void main() {
       expect(progressIndicator.value, equals(0.5));
     });
 
-    testWidgets('11. Progress is capped at 100% when overspent', (tester) async {
+    testWidgets('11. Progress is capped at 100% when overspent', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildTestableWidget(
           const CategoryBudgetBar(

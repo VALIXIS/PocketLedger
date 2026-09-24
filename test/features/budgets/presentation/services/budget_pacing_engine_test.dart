@@ -183,12 +183,18 @@ void main() {
 
     test('9. Leap year date calculation', () {
       final leapStart = DateTime(2028, 2, 1); // 2028 is a leap year
-      final nextMonth = BudgetPacingEngine.getNextPeriodStartDate(leapStart, BudgetPeriod.monthly);
+      final nextMonth = BudgetPacingEngine.getNextPeriodStartDate(
+        leapStart,
+        BudgetPeriod.monthly,
+      );
 
       expect(nextMonth.month, equals(3));
       expect(nextMonth.day, equals(1));
 
-      final leapYearEnd = BudgetPacingEngine.getNextPeriodStartDate(leapStart, BudgetPeriod.yearly);
+      final leapYearEnd = BudgetPacingEngine.getNextPeriodStartDate(
+        leapStart,
+        BudgetPeriod.yearly,
+      );
       expect(leapYearEnd.year, equals(2029));
     });
 
@@ -225,10 +231,7 @@ void main() {
       );
 
       expect(
-        () => pacingEngine.calculatePacing(
-          budget: budget,
-          spentInCents: -500,
-        ),
+        () => pacingEngine.calculatePacing(budget: budget, spentInCents: -500),
         throwsArgumentError,
       );
     });

@@ -54,8 +54,11 @@ class BudgetRepositoryImpl implements BudgetRepository {
     DateTime? newStartDate,
   }) async {
     final rolloverCents = calculateRolloverAmount(budget, spentAmountInCents);
-    final nextStartDate = newStartDate ?? getNextPeriodStartDate(budget.startDate, budget.period);
-    final nextId = newBudgetId ?? '${budget.id}_next_${nextStartDate.millisecondsSinceEpoch}';
+    final nextStartDate =
+        newStartDate ?? getNextPeriodStartDate(budget.startDate, budget.period);
+    final nextId =
+        newBudgetId ??
+        '${budget.id}_next_${nextStartDate.millisecondsSinceEpoch}';
 
     final nextBudget = budget.copyWith(
       id: nextId,
@@ -67,7 +70,10 @@ class BudgetRepositoryImpl implements BudgetRepository {
     return nextBudget;
   }
 
-  static DateTime getNextPeriodStartDate(DateTime startDate, BudgetPeriod period) {
+  static DateTime getNextPeriodStartDate(
+    DateTime startDate,
+    BudgetPeriod period,
+  ) {
     switch (period) {
       case BudgetPeriod.weekly:
         return startDate.add(const Duration(days: 7));
@@ -79,14 +85,32 @@ class BudgetRepositoryImpl implements BudgetRepository {
           year++;
         }
         int lastDayOfNextMonth = DateTime(year, month + 1, 0).day;
-        int day = startDate.day > lastDayOfNextMonth ? lastDayOfNextMonth : startDate.day;
-        return DateTime(year, month, day, startDate.hour, startDate.minute, startDate.second);
+        int day = startDate.day > lastDayOfNextMonth
+            ? lastDayOfNextMonth
+            : startDate.day;
+        return DateTime(
+          year,
+          month,
+          day,
+          startDate.hour,
+          startDate.minute,
+          startDate.second,
+        );
       case BudgetPeriod.yearly:
         int year = startDate.year + 1;
         int month = startDate.month;
         int lastDayOfMonth = DateTime(year, month + 1, 0).day;
-        int day = startDate.day > lastDayOfMonth ? lastDayOfMonth : startDate.day;
-        return DateTime(year, month, day, startDate.hour, startDate.minute, startDate.second);
+        int day = startDate.day > lastDayOfMonth
+            ? lastDayOfMonth
+            : startDate.day;
+        return DateTime(
+          year,
+          month,
+          day,
+          startDate.hour,
+          startDate.minute,
+          startDate.second,
+        );
     }
   }
 }

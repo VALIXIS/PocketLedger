@@ -147,7 +147,10 @@ void main() {
       );
 
       await notifier.addBudget(b1);
-      final updated = b1.copyWith(name: 'Updated Utilities', amountInCents: 18000);
+      final updated = b1.copyWith(
+        name: 'Updated Utilities',
+        amountInCents: 18000,
+      );
 
       await notifier.updateBudget(updated);
       expect(notifier.state.value?.first.name, equals('Updated Utilities'));

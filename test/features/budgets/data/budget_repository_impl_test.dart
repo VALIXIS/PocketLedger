@@ -23,7 +23,9 @@ void main() {
   });
 
   setUp(() async {
-    box = await Hive.openBox<Budget>('budgets_repo_test_${DateTime.now().microsecondsSinceEpoch}');
+    box = await Hive.openBox<Budget>(
+      'budgets_repo_test_${DateTime.now().microsecondsSinceEpoch}',
+    );
     dataSource = HiveBudgetLocalDataSource(box: box);
     repository = BudgetRepositoryImpl(localDataSource: dataSource);
   });
@@ -86,7 +88,10 @@ void main() {
       );
 
       await repository.saveBudget(b1);
-      final updated = b1.copyWith(name: 'Bills & Utilities', amountInCents: 18000);
+      final updated = b1.copyWith(
+        name: 'Bills & Utilities',
+        amountInCents: 18000,
+      );
       await repository.updateBudget(updated);
 
       final result = await repository.getBudgetById('b3');

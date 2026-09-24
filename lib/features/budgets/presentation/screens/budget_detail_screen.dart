@@ -6,6 +6,8 @@ import '../../domain/entities/budget.dart';
 import '../providers/budget_list_notifier.dart';
 import '../services/budget_pacing_engine.dart';
 import '../widgets/budget_form_modal.dart';
+import '../widgets/budget_recalibration_card.dart';
+import '../widgets/budget_stress_test_section.dart';
 import '../widgets/category_budget_bar.dart';
 
 class BudgetDetailScreen extends ConsumerWidget {
@@ -24,7 +26,9 @@ class BudgetDetailScreen extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Budget'),
-        content: Text('Are you sure you want to delete "${budget.name}"? This action cannot be undone.'),
+        content: Text(
+          'Are you sure you want to delete "${budget.name}"? This action cannot be undone.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
@@ -33,7 +37,9 @@ class BudgetDetailScreen extends ConsumerWidget {
           FilledButton(
             onPressed: () async {
               Navigator.pop(ctx);
-              await ref.read(budgetListNotifierProvider.notifier).deleteBudget(budget.id);
+              await ref
+                  .read(budgetListNotifierProvider.notifier)
+                  .deleteBudget(budget.id);
               if (context.mounted) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -58,14 +64,20 @@ class BudgetDetailScreen extends ConsumerWidget {
     final txState = ref.watch(transactionListProvider);
     return txState.maybeWhen(
       data: (transactions) {
-        final range = BudgetPacingEngine.getActivePeriodRange(budget, DateTime.now());
+        final range = BudgetPacingEngine.getActivePeriodRange(
+          budget,
+          DateTime.now(),
+        );
         int total = 0;
         for (var tx in transactions) {
           if (tx.type.name == 'expense') {
-            if (budget.categoryId.isNotEmpty && tx.category != budget.categoryId) {
+            if (budget.categoryId.isNotEmpty &&
+                tx.category != budget.categoryId) {
               continue;
             }
-            if (tx.date.isAfter(range.start.subtract(const Duration(seconds: 1))) &&
+            if (tx.date.isAfter(
+                  range.start.subtract(const Duration(seconds: 1)),
+                ) &&
                 tx.date.isBefore(range.end)) {
               total += tx.amountInCents;
             }
@@ -82,9 +94,9 @@ class BudgetDetailScreen extends ConsumerWidget {
       case BudgetPacingStatus.onTrack:
         return colorScheme.primary;
       case BudgetPacingStatus.warning:
-        return Colors.orange.shade700;
+        return colorScheme.tertiary;
       case BudgetPacingStatus.projectedToExceed:
-        return Colors.deepOrange;
+        return colorScheme.errorContainer;
       case BudgetPacingStatus.exceeded:
         return colorScheme.error;
     }
@@ -115,9 +127,7 @@ class BudgetDetailScreen extends ConsumerWidget {
       ),
       error: (err, _) => Scaffold(
         appBar: AppBar(title: const Text('Budget Details')),
-        body: Center(
-          child: Text('Error loading budget: $err'),
-        ),
+        body: Center(child: Text('Error loading budget: $err')),
       ),
       data: (budgets) {
         final budget = budgets.firstWhere(
@@ -213,7 +223,10 @@ class BudgetDetailScreen extends ConsumerWidget {
                           spacing: 8,
                           children: [
                             Chip(
-                              avatar: const Icon(Icons.calendar_month, size: 16),
+                              avatar: const Icon(
+                                Icons.calendar_month,
+                                size: 16,
+                              ),
                               label: Text(budget.period.name.toUpperCase()),
                             ),
                             if (budget.categoryId.isNotEmpty)
@@ -229,7 +242,9 @@ class BudgetDetailScreen extends ConsumerWidget {
                                 size: 16,
                               ),
                               label: Text(
-                                budget.rolloverEnabled ? 'Rollover Enabled' : 'No Rollover',
+                                budget.rolloverEnabled
+                                    ? 'Rollover Enabled'
+                                    : 'No Rollover',
                               ),
                             ),
                           ],
@@ -262,7 +277,8 @@ class BudgetDetailScreen extends ConsumerWidget {
                         _buildDetailRow(
                           context,
                           label: 'Projected Total Spend',
-                          value: '₹${(pacing.projectedSpendInCents / 100.0).toStringAsFixed(2)}',
+                          value:
+                              '\$${(pacing.projectedSpendInCents / 100.0).toStringAsFixed(2)}',
                           isBold: true,
                         ),
                         const Divider(height: 20),
@@ -270,14 +286,15 @@ class BudgetDetailScreen extends ConsumerWidget {
                           context,
                           label: 'Projected Remaining',
                           value: pacing.projectedRemainingInCents >= 0
-                              ? '₹${(pacing.projectedRemainingInCents / 100.0).toStringAsFixed(2)}'
-                              : 'Over by ₹${(-pacing.projectedRemainingInCents / 100.0).toStringAsFixed(2)}',
+                              ? '\$${(pacing.projectedRemainingInCents / 100.0).toStringAsFixed(2)}'
+                              : 'Over by \$${(-pacing.projectedRemainingInCents / 100.0).toStringAsFixed(2)}',
                         ),
                         const Divider(height: 20),
                         _buildDetailRow(
                           context,
                           label: 'Daily Spend Rate',
-                          value: '₹${(pacing.dailySpendRateInCents / 100.0).toStringAsFixed(2)} / day',
+                          value:
+                              '\$${(pacing.dailySpendRateInCents / 100.0).toStringAsFixed(2)} / day',
                         ),
                         const Divider(height: 20),
                         _buildDetailRow(
@@ -294,6 +311,16 @@ class BudgetDetailScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
+                ),
+                const SizedBox(height: 16),
+                BudgetStressTestSection(
+                  allocationInCents: budget.amountInCents,
+                  currentSpendingInCents: spentInCents,
+                ),
+                const SizedBox(height: 16),
+                BudgetRecalibrationCard(
+                  budget: budget,
+                  currentPeriodSpendingInCents: spentInCents,
                 ),
               ],
             ),

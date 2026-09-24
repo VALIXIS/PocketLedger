@@ -10,7 +10,9 @@ void main() {
   late HiveBudgetLocalDataSource dataSource;
 
   setUpAll(() async {
-    tempDir = await Directory.systemTemp.createTemp(HiveBudgetLocalDataSource.boxName);
+    tempDir = await Directory.systemTemp.createTemp(
+      HiveBudgetLocalDataSource.boxName,
+    );
     Hive.init(tempDir.path);
     if (!Hive.isAdapterRegistered(3)) {
       Hive.registerAdapter(BudgetAdapter());
@@ -21,7 +23,9 @@ void main() {
   });
 
   setUp(() async {
-    box = await Hive.openBox<Budget>('${HiveBudgetLocalDataSource.boxName}_test_${DateTime.now().microsecondsSinceEpoch}');
+    box = await Hive.openBox<Budget>(
+      '${HiveBudgetLocalDataSource.boxName}_test_${DateTime.now().microsecondsSinceEpoch}',
+    );
     dataSource = HiveBudgetLocalDataSource(box: box);
   });
 
@@ -111,7 +115,10 @@ void main() {
       );
 
       await dataSource.saveBudget(budget);
-      final updated = budget.copyWith(name: 'Updated Groceries', amountInCents: 60000);
+      final updated = budget.copyWith(
+        name: 'Updated Groceries',
+        amountInCents: 60000,
+      );
       await dataSource.updateBudget(updated);
 
       final fetched = await dataSource.getBudgetById('b1');

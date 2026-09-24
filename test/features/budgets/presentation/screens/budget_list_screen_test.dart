@@ -58,21 +58,25 @@ class MockTransactionLocalDataSource implements TransactionLocalDataSource {
 }
 
 void main() {
-  Widget buildTestableWidget(Widget child, {required MockBudgetRepository repo}) {
+  Widget buildTestableWidget(
+    Widget child, {
+    required MockBudgetRepository repo,
+  }) {
     return ProviderScope(
       overrides: [
         budgetRepositoryProvider.overrideWithValue(repo),
-        transactionLocalDataSourceProvider.overrideWithValue(MockTransactionLocalDataSource()),
+        transactionLocalDataSourceProvider.overrideWithValue(
+          MockTransactionLocalDataSource(),
+        ),
       ],
-      child: MaterialApp(
-        theme: ThemeData(useMaterial3: true),
-        home: child,
-      ),
+      child: MaterialApp(theme: ThemeData(useMaterial3: true), home: child),
     );
   }
 
   group('BudgetListScreen Widget Tests', () {
-    testWidgets('1. Displays empty state when no budgets exist', (tester) async {
+    testWidgets('1. Displays empty state when no budgets exist', (
+      tester,
+    ) async {
       final repo = MockBudgetRepository();
       await tester.pumpWidget(
         buildTestableWidget(const BudgetListScreen(), repo: repo),
@@ -104,7 +108,9 @@ void main() {
       expect(find.text('Weekly Snacks'), findsAtLeast(1));
     });
 
-    testWidgets('3. Displays error state on repository failure', (tester) async {
+    testWidgets('3. Displays error state on repository failure', (
+      tester,
+    ) async {
       final repo = MockBudgetRepository()..shouldThrow = true;
       await tester.pumpWidget(
         buildTestableWidget(const BudgetListScreen(), repo: repo),

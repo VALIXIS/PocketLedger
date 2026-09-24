@@ -54,21 +54,25 @@ class MockTransactionLocalDataSource implements TransactionLocalDataSource {
 }
 
 void main() {
-  Widget buildTestableWidget(Widget child, {required MockBudgetRepository repo}) {
+  Widget buildTestableWidget(
+    Widget child, {
+    required MockBudgetRepository repo,
+  }) {
     return ProviderScope(
       overrides: [
         budgetRepositoryProvider.overrideWithValue(repo),
-        transactionLocalDataSourceProvider.overrideWithValue(MockTransactionLocalDataSource()),
+        transactionLocalDataSourceProvider.overrideWithValue(
+          MockTransactionLocalDataSource(),
+        ),
       ],
-      child: MaterialApp(
-        theme: ThemeData(useMaterial3: true),
-        home: child,
-      ),
+      child: MaterialApp(theme: ThemeData(useMaterial3: true), home: child),
     );
   }
 
   group('BudgetDetailScreen Widget Tests', () {
-    testWidgets('6. Displays budget detail information correctly', (tester) async {
+    testWidgets('6. Displays budget detail information correctly', (
+      tester,
+    ) async {
       final repo = MockBudgetRepository();
       final b1 = Budget(
         id: 'b1',
@@ -80,7 +84,10 @@ void main() {
       await repo.saveBudget(b1);
 
       await tester.pumpWidget(
-        buildTestableWidget(const BudgetDetailScreen(budgetId: 'b1'), repo: repo),
+        buildTestableWidget(
+          const BudgetDetailScreen(budgetId: 'b1'),
+          repo: repo,
+        ),
       );
 
       await tester.pumpAndSettle();
@@ -101,7 +108,10 @@ void main() {
       await repo.saveBudget(b1);
 
       await tester.pumpWidget(
-        buildTestableWidget(const BudgetDetailScreen(budgetId: 'b1'), repo: repo),
+        buildTestableWidget(
+          const BudgetDetailScreen(budgetId: 'b1'),
+          repo: repo,
+        ),
       );
 
       await tester.pumpAndSettle();
@@ -111,7 +121,12 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Delete Budget'), findsOneWidget);
-      expect(find.text('Are you sure you want to delete "Dining Out"? This action cannot be undone.'), findsOneWidget);
+      expect(
+        find.text(
+          'Are you sure you want to delete "Dining Out"? This action cannot be undone.',
+        ),
+        findsOneWidget,
+      );
     });
   });
 }

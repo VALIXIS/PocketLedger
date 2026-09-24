@@ -7,6 +7,9 @@ import '../../domain/entities/budget_alert.dart';
 import '../../domain/repositories/budget_repository.dart';
 import '../../domain/services/budget_alert_engine.dart';
 import '../../domain/services/budget_notification_service.dart';
+import '../../domain/services/budget_recalibration_engine.dart';
+import '../../domain/services/budget_recommendation_advisor.dart';
+import '../../domain/services/budget_stress_test_engine.dart';
 import '../services/budget_pacing_engine.dart';
 
 final budgetLocalDataSourceProvider = Provider<BudgetLocalDataSource>((ref) {
@@ -26,9 +29,26 @@ final budgetAlertEngineProvider = Provider<BudgetAlertEngine>((ref) {
   return const BudgetAlertEngine();
 });
 
-final budgetNotificationServiceProvider = Provider<BudgetNotificationService>((ref) {
+final budgetNotificationServiceProvider = Provider<BudgetNotificationService>((
+  ref,
+) {
   return BudgetNotificationService();
 });
+
+final budgetStressTestEngineProvider = Provider<BudgetStressTestEngine>((ref) {
+  return const BudgetStressTestEngine();
+});
+
+final budgetRecalibrationEngineProvider = Provider<BudgetRecalibrationEngine>((
+  ref,
+) {
+  return const BudgetRecalibrationEngine();
+});
+
+final budgetRecommendationAdvisorProvider =
+    Provider<BudgetRecommendationAdvisor>((ref) {
+      return const DeterministicBudgetRecommendationAdvisor();
+    });
 
 /// Derived Riverpod provider for evaluating active budget alerts and triggering notification hooks.
 final activeBudgetAlertsProvider = Provider<List<BudgetAlert>>((ref) {
@@ -67,7 +87,11 @@ final activeBudgetAlertsProvider = Provider<List<BudgetAlert>>((ref) {
     spentMap[budget.id] = total;
   }
 
-  final alerts = alertEngine.evaluateActiveAlerts(budgets, spentMap, timestamp: now);
+  final alerts = alertEngine.evaluateActiveAlerts(
+    budgets,
+    spentMap,
+    timestamp: now,
+  );
 
   // Trigger notification hooks for state transition deduplication
   notificationService.processAlerts(alerts);
@@ -131,7 +155,9 @@ class BudgetListNotifier extends StateNotifier<AsyncValue<List<Budget>>> {
     try {
       await repository.updateBudget(budget);
       final currentList = state.value ?? [];
-      final newList = currentList.map((b) => b.id == budget.id ? budget : b).toList();
+      final newList = currentList
+          .map((b) => b.id == budget.id ? budget : b)
+          .toList();
       if (mounted) {
         state = AsyncValue.data(newList);
       }
