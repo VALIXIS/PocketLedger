@@ -44,7 +44,9 @@ class MockRecurringRepository implements RecurringRepository {
       transactions.values.where((tx) => tx.isActive).toList();
 
   @override
-  Future<List<RecurringTransaction>> getDueTransactions([DateTime? asOf]) async {
+  Future<List<RecurringTransaction>> getDueTransactions([
+    DateTime? asOf,
+  ]) async {
     final date = asOf ?? DateTime.now();
     return transactions.values.where((tx) => tx.isDueOn(date)).toList();
   }
@@ -243,7 +245,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.widgetWithText(RecurringTransactionCard, 'Reload Test Subscription'),
+        find.widgetWithText(
+          RecurringTransactionCard,
+          'Reload Test Subscription',
+        ),
         findsOneWidget,
       );
 
@@ -255,7 +260,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.widgetWithText(RecurringTransactionCard, 'Reload Test Subscription'),
+        find.widgetWithText(
+          RecurringTransactionCard,
+          'Reload Test Subscription',
+        ),
         findsOneWidget,
       );
     });

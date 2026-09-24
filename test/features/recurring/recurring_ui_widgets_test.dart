@@ -50,7 +50,9 @@ class FakeRecurringRepository implements RecurringRepository {
       transactions.values.where((tx) => tx.isActive).toList();
 
   @override
-  Future<List<RecurringTransaction>> getDueTransactions([DateTime? asOf]) async {
+  Future<List<RecurringTransaction>> getDueTransactions([
+    DateTime? asOf,
+  ]) async {
     final date = asOf ?? DateTime.now();
     return transactions.values.where((tx) => tx.isDueOn(date)).toList();
   }
