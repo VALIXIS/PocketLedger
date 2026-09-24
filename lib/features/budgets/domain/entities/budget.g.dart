@@ -18,11 +18,11 @@ class BudgetAdapter extends TypeAdapter<Budget> {
     };
     return Budget(
       id: fields[0] as String,
-      categoryId: fields[1] as String,
       name: fields[2] as String,
       amountInCents: fields[3] as int,
       period: fields[4] as BudgetPeriod,
       startDate: fields[5] as DateTime,
+      categoryId: fields[1] as String,
       rolloverEnabled: fields[6] as bool,
     );
   }

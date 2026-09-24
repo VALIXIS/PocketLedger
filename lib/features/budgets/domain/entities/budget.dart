@@ -39,22 +39,23 @@ class Budget extends HiveObject {
 
   Budget({
     required this.id,
-    required this.categoryId,
     required this.name,
     required this.amountInCents,
     required this.period,
     required this.startDate,
-    required this.rolloverEnabled,
+    this.categoryId = '',
+    this.rolloverEnabled = false,
   });
 
-  /// Helper to convert double amount to integer cents safely
+  // Helper to convert double amount to integer cents safely
   static int doubleToCents(double amount) {
     return (amount * 100).round();
   }
 
-  /// Helper getter to get double representation of the amount
+  // Helper getter to get double representation of the amount
   double get amount => amountInCents / 100.0;
 
+  // Helper copyWith method
   Budget copyWith({
     String? id,
     String? categoryId,
@@ -74,27 +75,4 @@ class Budget extends HiveObject {
       rolloverEnabled: rolloverEnabled ?? this.rolloverEnabled,
     );
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Budget &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          categoryId == other.categoryId &&
-          name == other.name &&
-          amountInCents == other.amountInCents &&
-          period == other.period &&
-          startDate == other.startDate &&
-          rolloverEnabled == other.rolloverEnabled;
-
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      categoryId.hashCode ^
-      name.hashCode ^
-      amountInCents.hashCode ^
-      period.hashCode ^
-      startDate.hashCode ^
-      rolloverEnabled.hashCode;
 }
