@@ -30,9 +30,13 @@ class TransactionListNotifier
       final list = await repository.getTransactions();
       // Sort by date descending so newest are first
       list.sort((a, b) => b.date.compareTo(a.date));
-      state = AsyncValue.data(list);
+      if (mounted) {
+        state = AsyncValue.data(list);
+      }
     } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
+      if (mounted) {
+        state = AsyncValue.error(e, stack);
+      }
     }
   }
 
@@ -42,9 +46,13 @@ class TransactionListNotifier
       final currentList = state.value ?? [];
       final newList = [...currentList, transaction];
       newList.sort((a, b) => b.date.compareTo(a.date));
-      state = AsyncValue.data(newList);
+      if (mounted) {
+        state = AsyncValue.data(newList);
+      }
     } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
+      if (mounted) {
+        state = AsyncValue.error(e, stack);
+      }
     }
   }
 
@@ -56,9 +64,13 @@ class TransactionListNotifier
         return tx.id == transaction.id ? transaction : tx;
       }).toList();
       newList.sort((a, b) => b.date.compareTo(a.date));
-      state = AsyncValue.data(newList);
+      if (mounted) {
+        state = AsyncValue.data(newList);
+      }
     } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
+      if (mounted) {
+        state = AsyncValue.error(e, stack);
+      }
     }
   }
 
@@ -67,9 +79,13 @@ class TransactionListNotifier
       await repository.deleteTransaction(id);
       final currentList = state.value ?? [];
       final newList = currentList.where((tx) => tx.id != id).toList();
-      state = AsyncValue.data(newList);
+      if (mounted) {
+        state = AsyncValue.data(newList);
+      }
     } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
+      if (mounted) {
+        state = AsyncValue.error(e, stack);
+      }
     }
   }
 }

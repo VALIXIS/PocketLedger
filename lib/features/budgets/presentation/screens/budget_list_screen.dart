@@ -4,6 +4,7 @@ import '../../../transactions/presentation/providers/transaction_providers.dart'
 import '../../domain/entities/budget.dart';
 import '../providers/budget_list_notifier.dart';
 import '../services/budget_pacing_engine.dart';
+import '../widgets/budget_alert_banner.dart';
 import '../widgets/budget_form_modal.dart';
 import '../widgets/category_budget_bar.dart';
 import 'budget_detail_screen.dart';
@@ -39,9 +40,9 @@ class BudgetListScreen extends ConsumerWidget {
       case BudgetPacingStatus.onTrack:
         return colorScheme.primary;
       case BudgetPacingStatus.warning:
-        return Colors.orange.shade700;
+        return colorScheme.tertiary;
       case BudgetPacingStatus.projectedToExceed:
-        return Colors.deepOrange;
+        return colorScheme.errorContainer;
       case BudgetPacingStatus.exceeded:
         return colorScheme.error;
     }
@@ -64,6 +65,7 @@ class BudgetListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final budgetState = ref.watch(budgetListNotifierProvider);
+    final activeAlerts = ref.watch(activeBudgetAlertsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -168,15 +170,22 @@ class BudgetListScreen extends ConsumerWidget {
             );
           }
 
+          final hasAlerts = activeAlerts.isNotEmpty;
+
           return RefreshIndicator(
             onRefresh: () async {
               await ref.read(budgetListNotifierProvider.notifier).refreshBudgets();
             },
             child: ListView.builder(
               padding: const EdgeInsets.all(16.0),
-              itemCount: budgets.length,
+              itemCount: budgets.length + (hasAlerts ? 1 : 0),
               itemBuilder: (context, index) {
-                final budget = budgets[index];
+                if (hasAlerts && index == 0) {
+                  return BudgetAlertSection(alerts: activeAlerts);
+                }
+
+                final budgetIndex = hasAlerts ? index - 1 : index;
+                final budget = budgets[budgetIndex];
                 final spentInCents = _calculateSpentInCents(budget, ref);
                 final notifier = ref.read(budgetListNotifierProvider.notifier);
                 final pacing = notifier.calculatePacing(
