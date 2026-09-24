@@ -39,7 +39,7 @@ $statusEmoji **Financial Health Summary** ($statusText)
 
 📌 **Key Spending Focus:**
 Your primary spending category is **$topCategory**, representing **$topCategoryPct%** of your overall expenditures.
-${telemetry.anomalyAlerts.isNotEmpty ? '\n⚠️ **Alerts Detected:**\n' + telemetry.anomalyAlerts.map((a) => '• $a').join('\n') : '\n✅ No critical spending anomalies detected.'}
+${telemetry.anomalyAlerts.isNotEmpty ? '\n⚠️ **Alerts Detected:**\n${telemetry.anomalyAlerts.map((a) => '• $a').join('\n')}' : '\n✅ No critical spending anomalies detected.'}
 """;
   }
 
@@ -100,7 +100,7 @@ ${telemetry.anomalyAlerts.isNotEmpty ? '\n⚠️ **Alerts Detected:**\n' + telem
       if (telemetry.anomalyAlerts.isEmpty) {
         return "🛡️ **Anomaly Audit:** No irregular spending spikes or budget overruns were detected in your ledger!";
       }
-      return "⚠️ **Anomaly Audit:**\n" + telemetry.anomalyAlerts.map((a) => "• $a").join('\n');
+      return "⚠️ **Anomaly Audit:**\n${telemetry.anomalyAlerts.map((a) => "• $a").join('\n')}";
     }
 
     // Default intelligent response synthesis

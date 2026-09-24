@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pocketledger/core/ai/financial_context_engine.dart';
 import 'package:pocketledger/core/utilities/demo_data_seeder.dart';
 import 'package:pocketledger/core/utilities/report_export_helper.dart';
-import 'package:pocketledger/features/transactions/domain/models/transaction.dart';
 
 void main() {
   group('Demo Data Seeder & Report Export Tests', () {
