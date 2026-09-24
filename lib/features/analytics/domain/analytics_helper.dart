@@ -1,7 +1,9 @@
 import 'package:pocketledger/features/transactions/domain/models/transaction.dart';
 import 'package:pocketledger/features/transactions/domain/models/transaction_type.dart';
 import 'models/analytics_report.dart';
+import 'models/category_velocity.dart';
 import 'models/monthly_trend.dart';
+import 'models/top_merchant.dart';
 
 /// Pure Dart, stateless helper class for calculating financial analytics and telemetry metrics.
 class AnalyticsHelper {
@@ -148,8 +150,6 @@ class AnalyticsHelper {
   }
 
   /// Calculates monthly financial trends grouped by calendar month and sorted chronologically.
-  ///
-  /// Returns a list of [MonthlyTrend] objects containing income, expenses, and net cashflow per month.
   static List<MonthlyTrend> calculateMonthlyTrends(
     List<Transaction> transactions,
   ) {
@@ -197,12 +197,108 @@ class AnalyticsHelper {
     return trends;
   }
 
+  /// Calculates Top Merchants grouped by merchant name/label from expense transactions.
+  ///
+  /// Uses `tx.note` as the primary merchant label, falling back to `tx.category`.
+  /// Returns a sorted list of top [limit] merchants.
+  static List<TopMerchant> calculateTopMerchants(
+    List<Transaction> transactions, {
+    int limit = 5,
+  }) {
+    if (transactions.isEmpty) return const [];
+
+    final Map<String, _MerchantAccumulator> map = {};
+
+    for (final tx in transactions) {
+      if (tx.type == TransactionType.expense) {
+        final String rawLabel =
+            tx.note.trim().isNotEmpty
+                ? tx.note.trim()
+                : (tx.category.trim().isNotEmpty
+                    ? tx.category.trim()
+                    : 'Uncategorized');
+
+        final label =
+            rawLabel.substring(0, 1).toUpperCase() + rawLabel.substring(1);
+
+        final acc = map.putIfAbsent(
+          label,
+          () => _MerchantAccumulator(merchantName: label),
+        );
+
+        acc.totalCents += tx.amountInCents;
+        acc.count += 1;
+      }
+    }
+
+    final list =
+        map.values.map((acc) {
+          return TopMerchant(
+            merchantName: acc.merchantName,
+            totalSpending: _sanitizeDouble(acc.totalCents / 100.0),
+            transactionCount: acc.count,
+          );
+        }).toList();
+
+    list.sort((a, b) {
+      final comp = b.totalSpending.compareTo(a.totalSpending);
+      if (comp != 0) return comp;
+      return b.transactionCount.compareTo(a.transactionCount);
+    });
+
+    return list.take(limit).toList();
+  }
+
+  /// Calculates category spending velocities (daily burn rate) for all expense categories.
+  static List<CategoryVelocity> calculateCategoryVelocities(
+    List<Transaction> transactions,
+  ) {
+    final expenses =
+        transactions.where((tx) => tx.type == TransactionType.expense).toList();
+    if (expenses.isEmpty) return const [];
+
+    final periodDays = calculatePeriodDays(expenses);
+    final safeDays = periodDays < 1 ? 1 : periodDays;
+
+    final Map<String, _CategoryAccumulator> map = {};
+
+    for (final tx in expenses) {
+      final rawCat =
+          tx.category.trim().isEmpty ? 'Uncategorized' : tx.category.trim();
+
+      final acc = map.putIfAbsent(
+        rawCat,
+        () => _CategoryAccumulator(category: rawCat),
+      );
+
+      acc.totalCents += tx.amountInCents;
+      acc.count += 1;
+    }
+
+    final list =
+        map.values.map((acc) {
+          final total = _sanitizeDouble(acc.totalCents / 100.0);
+          final velocity = _sanitizeDouble(total / safeDays);
+          final formattedName =
+              acc.category.substring(0, 1).toUpperCase() +
+              acc.category.substring(1).replaceAll('_', ' ');
+
+          return CategoryVelocity(
+            category: acc.category,
+            categoryName: formattedName,
+            totalSpending: total,
+            transactionCount: acc.count,
+            dailyVelocity: velocity,
+            periodDays: safeDays,
+          );
+        }).toList();
+
+    list.sort((a, b) => b.dailyVelocity.compareTo(a.dailyVelocity));
+
+    return list;
+  }
+
   /// Calculates period length in days.
-  ///
-  /// If [startDate] and [endDate] are provided, period length is determined from the date range.
-  /// Otherwise, period length is calculated from the earliest and latest transaction dates in [transactions].
-  ///
-  /// Returns 1 for same-day transactions/range, 0 for empty list or invalid date range.
   static int calculatePeriodDays(
     List<Transaction> transactions, {
     DateTime? startDate,
@@ -256,9 +352,6 @@ class AnalyticsHelper {
   }
 
   /// Calculates Cashflow Velocity (Average Net Cashflow per day).
-  ///
-  /// Conceptually: `Net Cashflow / Period Days`.
-  /// Handles same-day data and empty lists safely without returning NaN or Infinity.
   static double calculateCashflowVelocity(
     List<Transaction> transactions, {
     DateTime? startDate,
@@ -293,9 +386,6 @@ class AnalyticsHelper {
   }
 
   /// Calculates Income / Expense Ratio (`Income / Expenses`).
-  ///
-  /// If total expenses are zero, returns 0.0 safely.
-  /// Never returns NaN or Infinity.
   static double calculateIncomeExpenseRatio(List<Transaction> transactions) {
     int incomeCents = 0;
     int expenseCents = 0;
@@ -316,9 +406,6 @@ class AnalyticsHelper {
   }
 
   /// Calculates Savings Rate (`(Income - Expenses) / Income * 100`).
-  ///
-  /// If total income is zero, returns 0.0 safely.
-  /// Returns numeric value (e.g. 25.0 for 25%).
   static double calculateSavingsRate(List<Transaction> transactions) {
     int incomeCents = 0;
     int expenseCents = 0;
@@ -401,4 +488,20 @@ class _MonthlyTotals {
   int expenseCents = 0;
 
   _MonthlyTotals({required this.year, required this.month});
+}
+
+class _MerchantAccumulator {
+  final String merchantName;
+  int totalCents = 0;
+  int count = 0;
+
+  _MerchantAccumulator({required this.merchantName});
+}
+
+class _CategoryAccumulator {
+  final String category;
+  int totalCents = 0;
+  int count = 0;
+
+  _CategoryAccumulator({required this.category});
 }

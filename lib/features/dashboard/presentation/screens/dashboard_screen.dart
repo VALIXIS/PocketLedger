@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/utilities/category_ui_helper.dart';
 import '../../../../core/utilities/currency_formatter.dart';
 import '../../../ai_assistant/presentation/screens/ai_assistant_screen.dart';
+import '../../../analytics/presentation/screens/analytics_screen.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../transactions/domain/models/transaction_type.dart';
@@ -22,6 +23,17 @@ class DashboardScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('PocketLedger'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.analytics_outlined, color: Colors.indigo),
+            tooltip: 'Analytics & Telemetry',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AnalyticsScreen(),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.auto_awesome, color: Colors.teal),
             tooltip: 'Gemini AI Assistant',
