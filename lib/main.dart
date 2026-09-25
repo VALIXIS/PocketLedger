@@ -31,6 +31,9 @@ void main() async {
   if (!Hive.isAdapterRegistered(3)) {
     Hive.registerAdapter(BudgetAdapter());
   }
+  if (!Hive.isAdapterRegistered(9)) {
+    Hive.registerAdapter(BudgetPeriodAdapter());
+  }
   if (!Hive.isAdapterRegistered(6)) {
     Hive.registerAdapter(GoalStatusAdapter());
   }

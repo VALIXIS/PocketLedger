@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'budget.g.dart';
 
-@HiveType(typeId: 4)
+@HiveType(typeId: 9)
 enum BudgetPeriod {
   @HiveField(0)
   weekly,

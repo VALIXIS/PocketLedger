@@ -60,7 +60,7 @@ class BudgetAdapter extends TypeAdapter<Budget> {
 
 class BudgetPeriodAdapter extends TypeAdapter<BudgetPeriod> {
   @override
-  final int typeId = 4;
+  final int typeId = 9;
 
   @override
   BudgetPeriod read(BinaryReader reader) {
