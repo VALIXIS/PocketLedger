@@ -463,5 +463,37 @@ void main() {
         expect(result.first.id, 'tx-3');
       });
     });
+
+    group('11. Large Dataset & Edge Case Boundary Tests', () {
+      test('efficiently filters a large list of 2,000 transactions', () {
+        final largeDataset = List.generate(2000, (i) {
+          final isEven = i.isEven;
+          return Transaction(
+            id: 'tx-$i',
+            type: isEven ? TransactionType.expense : TransactionType.income,
+            amountInCents: (i + 1) * 100, // $1 to $2000
+            category: isEven ? 'food' : 'salary',
+            date: DateTime(2026, 9, 1).add(Duration(hours: i)),
+            note: 'Transaction record number $i with detailed note',
+            createdAt: baseDate,
+          );
+        });
+
+        final stopwatch = Stopwatch()..start();
+        final results = service.search(
+          largeDataset,
+          query: 'number 150',
+          type: TransactionType.expense,
+          minAmount: 100.0,
+          maxAmount: 2000.0,
+        );
+        stopwatch.stop();
+
+        // Must execute swiftly in < 50ms
+        expect(stopwatch.elapsedMilliseconds, lessThan(50));
+        expect(results, isNotEmpty);
+        expect(results.every((t) => t.type == TransactionType.expense), isTrue);
+      });
+    });
   });
 }
