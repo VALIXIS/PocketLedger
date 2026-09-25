@@ -138,16 +138,20 @@ class IncomeExpenseSummaryCard extends StatelessWidget {
                   child: Icon(icon, color: color, size: 16),
                 ),
                 const SizedBox(width: AppSpacing.space8),
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: isOled
-                        ? AppColors.oledTextSecondary
-                        : (isDark
-                              ? AppColors.darkTextSecondary
-                              : AppColors.lightTextSecondary),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
+                Flexible(
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: isOled
+                          ? AppColors.oledTextSecondary
+                          : (isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ],
