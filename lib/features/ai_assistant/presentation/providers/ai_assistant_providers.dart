@@ -51,20 +51,20 @@ class AIAssistantNotifier extends StateNotifier<AIAssistantState> {
   final Ref ref;
 
   AIAssistantNotifier(this.ref)
-      : super(
-          AIAssistantState(
-            messages: [
-              ChatMessage(
-                id: 'welcome',
-                text:
-                    "👋 **Hello! I am PocketLedger AI Advisor.**\n\nI analyze your transaction telemetry locally and provide real-time budget coaching, spending anomaly detection, and financial insights.\n\nTap a quick action below or ask me any question!",
-                isUser: false,
-                timestamp: DateTime.now(),
-              ),
-            ],
-            isLoading: false,
-          ),
-        );
+    : super(
+        AIAssistantState(
+          messages: [
+            ChatMessage(
+              id: 'welcome',
+              text:
+                  "👋 **Hello! I am PocketLedger AI Advisor.**\n\nI analyze your transaction telemetry locally and provide real-time budget coaching, spending anomaly detection, and financial insights.\n\nTap a quick action below or ask me any question!",
+              isUser: false,
+              timestamp: DateTime.now(),
+            ),
+          ],
+          isLoading: false,
+        ),
+      );
 
   Future<void> sendUserQuery(String queryText) async {
     if (queryText.trim().isEmpty) return;
@@ -86,7 +86,10 @@ class AIAssistantNotifier extends StateNotifier<AIAssistantState> {
     final telemetry = FinancialContextEngine.aggregate(transactions);
 
     final aiService = ref.read(geminiAIServiceProvider);
-    final aiAnswer = await aiService.answerFinancialQuestion(queryText, telemetry);
+    final aiAnswer = await aiService.answerFinancialQuestion(
+      queryText,
+      telemetry,
+    );
 
     final aiMsg = ChatMessage(
       id: (DateTime.now().millisecondsSinceEpoch + 1).toString(),

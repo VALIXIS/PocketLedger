@@ -53,7 +53,9 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen> {
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -140,7 +142,10 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen> {
 
             if (state.isLoading)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8.0,
+                  horizontal: 16.0,
+                ),
                 child: Row(
                   children: [
                     const SizedBox(
@@ -241,7 +246,9 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen> {
             Text(
               msg.text,
               style: TextStyle(
-                color: isUser ? Colors.white : (isDark ? Colors.white : Colors.black87),
+                color: isUser
+                    ? Colors.white
+                    : (isDark ? Colors.white : Colors.black87),
                 fontSize: 14.5,
                 height: 1.4,
               ),
@@ -253,9 +260,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen> {
                 '${msg.timestamp.hour.toString().padLeft(2, '0')}:${msg.timestamp.minute.toString().padLeft(2, '0')}',
                 style: TextStyle(
                   fontSize: 10,
-                  color: isUser
-                      ? Colors.white70
-                      : Colors.grey.shade500,
+                  color: isUser ? Colors.white70 : Colors.grey.shade500,
                 ),
               ),
             ),

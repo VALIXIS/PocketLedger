@@ -21,11 +21,7 @@ class CategoryAvatar extends StatelessWidget {
     return CircleAvatar(
       radius: radius,
       backgroundColor: color.withValues(alpha: 0.15),
-      child: Icon(
-        icon,
-        color: color,
-        size: iconSize,
-      ),
+      child: Icon(icon, color: color, size: iconSize),
     );
   }
 }

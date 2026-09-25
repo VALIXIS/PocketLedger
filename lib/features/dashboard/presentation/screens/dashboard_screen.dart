@@ -4,6 +4,9 @@ import '../../../../core/utilities/category_ui_helper.dart';
 import '../../../../core/utilities/currency_formatter.dart';
 import '../../../ai_assistant/presentation/screens/ai_assistant_screen.dart';
 import '../../../analytics/presentation/screens/analytics_screen.dart';
+import '../../../budgets/presentation/screens/budget_list_screen.dart';
+import '../../../goals/presentation/screens/financial_goals_screen.dart';
+import '../../../recurring/presentation/screens/recurring_manager_screen.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../transactions/domain/models/transaction_type.dart';
@@ -24,12 +27,45 @@ class DashboardScreen extends ConsumerWidget {
         title: const Text('PocketLedger'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.account_balance_wallet_outlined, color: Colors.amber),
+            tooltip: 'Budgets & Pacing',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const BudgetListScreen(),
+                ),
+              );
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.analytics_outlined, color: Colors.indigo),
             tooltip: 'Analytics & Telemetry',
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => const AnalyticsScreen(),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.repeat_rounded),
+            tooltip: 'Subscriptions & Recurring',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const RecurringManagerScreen(),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.savings_outlined),
+            tooltip: 'Savings Goals',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const FinancialGoalsScreen(),
                 ),
               );
             },
