@@ -69,7 +69,8 @@ class InMemoryCategoryRepository implements CategoryRepository {
   Future<List<Category>> getCategories() => dataSource.getCategories();
 
   @override
-  Future<void> addCategory(Category category) => dataSource.saveCategory(category);
+  Future<void> addCategory(Category category) =>
+      dataSource.saveCategory(category);
 }
 
 void main() {
@@ -116,7 +117,9 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             overrides: [
-              transactionLocalDataSourceProvider.overrideWithValue(txDataSource),
+              transactionLocalDataSourceProvider.overrideWithValue(
+                txDataSource,
+              ),
               categoryLocalDataSourceProvider.overrideWithValue(catDataSource),
               categoryRepositoryProvider.overrideWithValue(catRepo),
             ],
@@ -133,7 +136,9 @@ void main() {
         final element = tester.element(find.byType(SearchScreen));
         final container = ProviderScope.containerOf(element);
 
-        await container.read(transactionListProvider.notifier).addTransaction(
+        await container
+            .read(transactionListProvider.notifier)
+            .addTransaction(
               Transaction(
                 id: 'tx-4',
                 type: TransactionType.expense,
@@ -164,7 +169,9 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             overrides: [
-              transactionLocalDataSourceProvider.overrideWithValue(txDataSource),
+              transactionLocalDataSourceProvider.overrideWithValue(
+                txDataSource,
+              ),
               categoryLocalDataSourceProvider.overrideWithValue(catDataSource),
               categoryRepositoryProvider.overrideWithValue(catRepo),
             ],
@@ -213,7 +220,9 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             overrides: [
-              transactionLocalDataSourceProvider.overrideWithValue(txDataSource),
+              transactionLocalDataSourceProvider.overrideWithValue(
+                txDataSource,
+              ),
               categoryLocalDataSourceProvider.overrideWithValue(catDataSource),
               categoryRepositoryProvider.overrideWithValue(catRepo),
             ],
@@ -228,9 +237,15 @@ void main() {
         final element = tester.element(find.byType(SearchScreen));
         final container = ProviderScope.containerOf(element);
 
-        await container.read(transactionListProvider.notifier).deleteTransaction('tx-1');
-        await container.read(transactionListProvider.notifier).deleteTransaction('tx-2');
-        await container.read(transactionListProvider.notifier).deleteTransaction('tx-3');
+        await container
+            .read(transactionListProvider.notifier)
+            .deleteTransaction('tx-1');
+        await container
+            .read(transactionListProvider.notifier)
+            .deleteTransaction('tx-2');
+        await container
+            .read(transactionListProvider.notifier)
+            .deleteTransaction('tx-3');
 
         await tester.pumpAndSettle();
 
@@ -249,7 +264,9 @@ void main() {
         expect(restoreResult.restoredTransactionsCount, 3);
 
         // Reload transactions into Riverpod state
-        await container.read(transactionListProvider.notifier).loadTransactions();
+        await container
+            .read(transactionListProvider.notifier)
+            .loadTransactions();
         await tester.pumpAndSettle();
 
         // Search screen immediately recovers and displays all 3 restored transactions
