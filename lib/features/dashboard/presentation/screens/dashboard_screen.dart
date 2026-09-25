@@ -27,7 +27,10 @@ class DashboardScreen extends ConsumerWidget {
         title: const Text('PocketLedger'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.account_balance_wallet_outlined, color: Colors.amber),
+            icon: const Icon(
+              Icons.account_balance_wallet_outlined,
+              color: Colors.amber,
+            ),
             tooltip: 'Budgets & Pacing',
             onPressed: () {
               Navigator.of(context).push(
