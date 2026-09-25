@@ -31,8 +31,9 @@ class _SpendingTrendLineChartState
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Enforce 12-month maximum window (latest 12 months)
-    final displayTrends =
-        trends.length > 12 ? trends.sublist(trends.length - 12) : trends;
+    final displayTrends = trends.length > 12
+        ? trends.sublist(trends.length - 12)
+        : trends;
 
     if (displayTrends.isEmpty) {
       return _buildEmptyState(context);
@@ -113,22 +114,20 @@ class _SpendingTrendLineChartState
                       }).toList();
                     },
                   ),
-                  touchCallback: (
-                    FlTouchEvent event,
-                    LineTouchResponse? response,
-                  ) {
-                    setState(() {
-                      if (!event.isInterestedForInteractions ||
-                          response == null ||
-                          response.lineBarSpots == null ||
-                          response.lineBarSpots!.isEmpty) {
-                        _touchedSpotIndex = null;
-                        return;
-                      }
-                      _touchedSpotIndex =
-                          response.lineBarSpots!.first.spotIndex;
-                    });
-                  },
+                  touchCallback:
+                      (FlTouchEvent event, LineTouchResponse? response) {
+                        setState(() {
+                          if (!event.isInterestedForInteractions ||
+                              response == null ||
+                              response.lineBarSpots == null ||
+                              response.lineBarSpots!.isEmpty) {
+                            _touchedSpotIndex = null;
+                            return;
+                          }
+                          _touchedSpotIndex =
+                              response.lineBarSpots!.first.spotIndex;
+                        });
+                      },
                 ),
                 gridData: FlGridData(
                   show: true,
@@ -180,9 +179,9 @@ class _SpendingTrendLineChartState
                         final index = value.toInt();
                         if (index >= 0 && index < displayTrends.length) {
                           final trend = displayTrends[index];
-                          final label = DateFormat('MMM').format(
-                            DateTime(trend.year, trend.month),
-                          );
+                          final label = DateFormat(
+                            'MMM',
+                          ).format(DateTime(trend.year, trend.month));
                           return Padding(
                             padding: const EdgeInsets.only(top: 6.0),
                             child: Text(

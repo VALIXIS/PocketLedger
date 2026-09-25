@@ -48,27 +48,32 @@ void main() {
         ],
         child: const MaterialApp(
           home: Scaffold(
-            body: SingleChildScrollView(
-              child: CategorySpendingPieChart(),
-            ),
+            body: SingleChildScrollView(child: CategorySpendingPieChart()),
           ),
         ),
       );
     }
 
-    testWidgets('renders empty state when there are no transactions or no expenses', (tester) async {
-      await tester.pumpWidget(createTestableWidget());
-      await tester.pumpAndSettle();
+    testWidgets(
+      'renders empty state when there are no transactions or no expenses',
+      (tester) async {
+        await tester.pumpWidget(createTestableWidget());
+        await tester.pumpAndSettle();
 
-      expect(find.text('Expense Breakdown by Category'), findsOneWidget);
-      expect(find.text('No Expense Category Data'), findsOneWidget);
-      expect(
-        find.text('Add expense transactions to see your interactive category breakdown.'),
-        findsOneWidget,
-      );
-    });
+        expect(find.text('Expense Breakdown by Category'), findsOneWidget);
+        expect(find.text('No Expense Category Data'), findsOneWidget);
+        expect(
+          find.text(
+            'Add expense transactions to see your interactive category breakdown.',
+          ),
+          findsOneWidget,
+        );
+      },
+    );
 
-    testWidgets('renders empty state when there are only income transactions', (tester) async {
+    testWidgets('renders empty state when there are only income transactions', (
+      tester,
+    ) async {
       mockRepository.saveTransaction(
         Transaction(
           id: '1',
@@ -87,7 +92,9 @@ void main() {
       expect(find.text('No Expense Category Data'), findsOneWidget);
     });
 
-    testWidgets('renders category breakdown donut chart with expense data', (tester) async {
+    testWidgets('renders category breakdown donut chart with expense data', (
+      tester,
+    ) async {
       mockRepository.saveTransaction(
         Transaction(
           id: '1',
@@ -135,7 +142,9 @@ void main() {
       expect(find.text('Tap any slice to inspect'), findsOneWidget);
     });
 
-    testWidgets('handles single category expense list correctly', (tester) async {
+    testWidgets('handles single category expense list correctly', (
+      tester,
+    ) async {
       mockRepository.saveTransaction(
         Transaction(
           id: '1',
