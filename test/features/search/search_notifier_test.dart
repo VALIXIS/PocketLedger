@@ -129,7 +129,10 @@ void main() {
         // User types 'C'
         notifier.setNoteQuery('C');
         expect(notifier.state.isLoading, isTrue);
-        expect(notifier.state.filteredTransactions.length, 5); // not yet filtered
+        expect(
+          notifier.state.filteredTransactions.length,
+          5,
+        ); // not yet filtered
 
         // 20ms later, user types 'Co'
         await Future.delayed(const Duration(milliseconds: 20));

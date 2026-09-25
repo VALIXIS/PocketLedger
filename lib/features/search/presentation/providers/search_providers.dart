@@ -5,6 +5,7 @@ import '../../../transactions/domain/models/transaction_type.dart';
 import '../../../transactions/presentation/providers/transaction_providers.dart';
 import '../../models/quick_filter_tag.dart';
 import '../../models/search_state.dart';
+import '../../models/transaction_sort_option.dart';
 import '../../services/transaction_search_service.dart';
 
 /// Provider for the stateless [TransactionSearchService] engine.
@@ -13,7 +14,7 @@ final searchServiceProvider = Provider<TransactionSearchService>((ref) {
 });
 
 /// StateNotifier managing transaction search state, debounced text search,
-/// multi-parameter filtering, and quick tags.
+/// multi-parameter filtering, quick tags, and result sorting.
 class SearchNotifier extends StateNotifier<SearchState> {
   final Ref? ref;
   final TransactionSearchService searchService;
@@ -37,12 +38,13 @@ class SearchNotifier extends StateNotifier<SearchState> {
 
     final currentRef = ref;
     if (currentRef != null) {
-      currentRef.listen<AsyncValue<List<Transaction>>>(transactionListProvider, (
-        previous,
-        next,
-      ) {
-        _onTransactionListUpdated(next);
-      }, fireImmediately: true);
+      currentRef.listen<AsyncValue<List<Transaction>>>(
+        transactionListProvider,
+        (previous, next) {
+          _onTransactionListUpdated(next);
+        },
+        fireImmediately: true,
+      );
     }
   }
 
@@ -161,6 +163,15 @@ class SearchNotifier extends StateNotifier<SearchState> {
     _applySearchImmediately();
   }
 
+  /// Updates sort strategy and reorders filtered transactions.
+  void setSortOption(TransactionSortOption? sortOption) {
+    state = state.copyWith(
+      sortOption: sortOption,
+      clearSortOption: sortOption == null,
+    );
+    _applySearchImmediately();
+  }
+
   /// Toggles a quick filter tag on or off.
   ///
   /// Enforces mutual exclusivity within type tags (Income vs Expense) and date tags (Today vs This Week vs This Month).
@@ -254,22 +265,30 @@ class SearchNotifier extends StateNotifier<SearchState> {
   /// Resets all search parameters, debounces, and filters, restoring the complete transaction list.
   void clearAllFilters() {
     _debounceTimer?.cancel();
+    final rawResults = List<Transaction>.from(_sourceTransactions);
+    final finalResults = state.sortOption != null
+        ? _sortTransactions(rawResults, state.sortOption!)
+        : rawResults;
     state = SearchState(
       noteQuery: '',
+      sortOption: state.sortOption,
       totalTransactionCount: _sourceTransactions.length,
-      filteredTransactions: List.unmodifiable(_sourceTransactions),
+      filteredTransactions: List.unmodifiable(finalResults),
       isLoading: false,
     );
   }
 
-  /// Applies active filters against current source transactions synchronously.
+  /// Applies active filters against current source transactions synchronously and sorts.
   void _applySearchImmediately() {
     _debounceTimer?.cancel();
     try {
       final filter = state.toFilter(referenceDate: _nowProvider());
-      final results = searchService.filter(_sourceTransactions, filter);
+      final rawResults = searchService.filter(_sourceTransactions, filter);
+      final finalResults = state.sortOption != null
+          ? _sortTransactions(rawResults, state.sortOption!)
+          : rawResults;
       state = state.copyWith(
-        filteredTransactions: results,
+        filteredTransactions: finalResults,
         totalTransactionCount: _sourceTransactions.length,
         isLoading: false,
         clearErrorMessage: true,
@@ -277,6 +296,28 @@ class SearchNotifier extends StateNotifier<SearchState> {
     } catch (e) {
       state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
+  }
+
+  List<Transaction> _sortTransactions(
+    List<Transaction> list,
+    TransactionSortOption sortOption,
+  ) {
+    final copy = List<Transaction>.from(list);
+    switch (sortOption) {
+      case TransactionSortOption.newest:
+        copy.sort((a, b) => b.date.compareTo(a.date));
+        break;
+      case TransactionSortOption.oldest:
+        copy.sort((a, b) => a.date.compareTo(b.date));
+        break;
+      case TransactionSortOption.highestAmount:
+        copy.sort((a, b) => b.amountInCents.compareTo(a.amountInCents));
+        break;
+      case TransactionSortOption.lowestAmount:
+        copy.sort((a, b) => a.amountInCents.compareTo(b.amountInCents));
+        break;
+    }
+    return copy;
   }
 
   @override
@@ -327,4 +368,9 @@ final searchQuickFiltersProvider = Provider<Set<QuickFilterTag>>((ref) {
   return ref.watch(
     searchNotifierProvider.select((s) => s.selectedQuickFilters),
   );
+});
+
+/// Granular provider for active sorting option.
+final searchSortOptionProvider = Provider<TransactionSortOption?>((ref) {
+  return ref.watch(searchNotifierProvider.select((s) => s.sortOption));
 });

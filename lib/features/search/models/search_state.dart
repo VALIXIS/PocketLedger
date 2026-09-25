@@ -3,8 +3,9 @@ import '../../transactions/domain/models/transaction.dart';
 import '../../transactions/domain/models/transaction_type.dart';
 import 'quick_filter_tag.dart';
 import 'transaction_search_filter.dart';
+import 'transaction_sort_option.dart';
 
-/// Immutable state representation for transaction search and multi-parameter filtering.
+/// Immutable state representation for transaction search, multi-parameter filtering, and sorting.
 @immutable
 class SearchState {
   /// Active text query to search within transaction notes.
@@ -31,6 +32,9 @@ class SearchState {
   /// Set of currently selected quick filter tags.
   final Set<QuickFilterTag> selectedQuickFilters;
 
+  /// Optional sorting strategy for search results.
+  final TransactionSortOption? sortOption;
+
   /// Filtered list of transactions matching all active criteria.
   final List<Transaction> filteredTransactions;
 
@@ -52,13 +56,14 @@ class SearchState {
     this.maxAmount,
     this.transactionType,
     this.selectedQuickFilters = const {},
+    this.sortOption,
     this.filteredTransactions = const [],
     this.totalTransactionCount = 0,
     this.isLoading = false,
     this.errorMessage,
   });
 
-  /// Returns `true` if any search query, category, date, amount, type, or quick-filter is active.
+  /// Returns `true` if any search query, category, date, amount, type, quick-filter, or sort is active.
   bool get hasActiveFilters {
     return noteQuery.trim().isNotEmpty ||
         (categoryId != null && categoryId!.trim().isNotEmpty) ||
@@ -74,9 +79,6 @@ class SearchState {
   int get matchCount => filteredTransactions.length;
 
   /// Resolves the current state and quick filter tags into a unified [TransactionSearchFilter].
-  ///
-  /// [referenceDate] defaults to [DateTime.now()] when resolving relative date tags like 'Today',
-  /// 'This Week', or 'This Month'.
   TransactionSearchFilter toFilter({DateTime? referenceDate}) {
     final now = referenceDate ?? DateTime.now();
 
@@ -139,6 +141,7 @@ class SearchState {
     double? maxAmount,
     TransactionType? transactionType,
     Set<QuickFilterTag>? selectedQuickFilters,
+    TransactionSortOption? sortOption,
     List<Transaction>? filteredTransactions,
     int? totalTransactionCount,
     bool? isLoading,
@@ -149,6 +152,7 @@ class SearchState {
     bool clearMinAmount = false,
     bool clearMaxAmount = false,
     bool clearTransactionType = false,
+    bool clearSortOption = false,
     bool clearErrorMessage = false,
   }) {
     return SearchState(
@@ -162,6 +166,7 @@ class SearchState {
           ? null
           : (transactionType ?? this.transactionType),
       selectedQuickFilters: selectedQuickFilters ?? this.selectedQuickFilters,
+      sortOption: clearSortOption ? null : (sortOption ?? this.sortOption),
       filteredTransactions: filteredTransactions ?? this.filteredTransactions,
       totalTransactionCount:
           totalTransactionCount ?? this.totalTransactionCount,
@@ -184,6 +189,7 @@ class SearchState {
         other.maxAmount == maxAmount &&
         other.transactionType == transactionType &&
         setEquals(other.selectedQuickFilters, selectedQuickFilters) &&
+        other.sortOption == sortOption &&
         listEquals(other.filteredTransactions, filteredTransactions) &&
         other.totalTransactionCount == totalTransactionCount &&
         other.isLoading == isLoading &&
@@ -200,6 +206,7 @@ class SearchState {
     maxAmount,
     transactionType,
     Object.hashAll(selectedQuickFilters),
+    sortOption,
     Object.hashAll(filteredTransactions),
     totalTransactionCount,
     isLoading,
@@ -217,6 +224,7 @@ class SearchState {
         'maxAmount: $maxAmount, '
         'type: $transactionType, '
         'quickFilters: $selectedQuickFilters, '
+        'sortOption: $sortOption, '
         'results: ${filteredTransactions.length}/$totalTransactionCount, '
         'isLoading: $isLoading, '
         'error: $errorMessage'
