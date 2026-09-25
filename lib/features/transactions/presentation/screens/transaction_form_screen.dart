@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import '../../../../core/accessibility/accessible_date_picker.dart';
+import '../../../../core/accessibility/accessible_dialog.dart';
 import '../../../../core/utilities/category_ui_helper.dart';
 import '../../../../core/utilities/input_validators.dart';
 import '../../../categories/presentation/providers/category_providers.dart';
@@ -52,7 +54,7 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await showAccessibleDatePicker(
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime(2000),
@@ -126,43 +128,40 @@ class _TransactionFormScreenState extends ConsumerState<TransactionFormScreen> {
   void _deleteTransaction() {
     if (!_isEditing) return;
 
-    showDialog(
+    showAccessibleAlertDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Delete Transaction'),
-        content: const Text(
-          'Are you sure you want to delete this transaction?',
+      title: 'Delete Transaction',
+      contentText: 'Are you sure you want to delete this transaction?',
+      isDestructive: true,
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(ctx).pop(); // close dialog
-              ref
-                  .read(transactionListProvider.notifier)
-                  .deleteTransaction(widget.transactionToEdit!.id)
-                  .then((_) {
-                    if (mounted) {
-                      Navigator.of(context).pop(); // return to dashboard
-                    }
-                  })
-                  .catchError((error) {
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Error deleting transaction: $error'),
-                        ),
-                      );
-                    }
-                  });
-            },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // close dialog
+            ref
+                .read(transactionListProvider.notifier)
+                .deleteTransaction(widget.transactionToEdit!.id)
+                .then((_) {
+                  if (mounted) {
+                    Navigator.of(context).pop(); // return to dashboard
+                  }
+                })
+                .catchError((error) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error deleting transaction: $error'),
+                      ),
+                    );
+                  }
+                });
+          },
+          child: const Text('Delete'),
+        ),
+      ],
     );
   }
 

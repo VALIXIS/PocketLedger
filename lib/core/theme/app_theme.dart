@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../accessibility/a11y_theme.dart';
 
 /// Centralized color tokens for PocketLedger.
 ///
@@ -356,6 +357,7 @@ class AppTheme {
   // Backwards compatible getters
   static ThemeData get lightTheme => light;
   static ThemeData get darkTheme => dark;
+  static ThemeData get oledTheme => oled;
 
   /// Enterprise Light Theme for PocketLedger.
   static ThemeData get light {
@@ -509,7 +511,7 @@ class AppTheme {
 
     final isLight = colorScheme.brightness == Brightness.light;
 
-    return ThemeData(
+    final baseTheme = ThemeData(
       useMaterial3: true,
       brightness: colorScheme.brightness,
       colorScheme: colorScheme,
@@ -887,5 +889,7 @@ class AppTheme {
         ),
       ),
     );
+
+    return AccessibilityTheme.apply(baseTheme, dark: !isLight, isOled: isOled);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import '../../../../core/accessibility/accessible_date_picker.dart';
 import '../../../../core/utilities/category_ui_helper.dart';
 import '../../../../core/utilities/currency_formatter.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
@@ -168,7 +169,7 @@ class _RecurringFormState extends ConsumerState<RecurringForm> {
   }
 
   Future<void> _selectStartDate() async {
-    final picked = await showDatePicker(
+    final picked = await showAccessibleDatePicker(
       context: context,
       initialDate: _startDate,
       firstDate: DateTime(2020),
@@ -185,7 +186,7 @@ class _RecurringFormState extends ConsumerState<RecurringForm> {
   }
 
   Future<void> _selectNextOccurrence() async {
-    final picked = await showDatePicker(
+    final picked = await showAccessibleDatePicker(
       context: context,
       initialDate: _nextOccurrence,
       firstDate: DateTime(2020),
@@ -198,7 +199,7 @@ class _RecurringFormState extends ConsumerState<RecurringForm> {
 
   Future<void> _selectEndDate() async {
     final initial = _endDate ?? _nextOccurrence.add(const Duration(days: 365));
-    final picked = await showDatePicker(
+    final picked = await showAccessibleDatePicker(
       context: context,
       initialDate: initial.isBefore(_startDate) ? _startDate : initial,
       firstDate: _startDate,

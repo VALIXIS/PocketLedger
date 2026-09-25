@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import '../../../../core/accessibility/accessible_date_picker.dart';
 import '../../../../core/utilities/currency_formatter.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
 import '../../data/models/financial_goal.dart';
@@ -121,7 +122,7 @@ class _GoalFormState extends ConsumerState<GoalForm> {
     final firstDate = DateTime(now.year - 1, 1, 1);
     final lastDate = DateTime(now.year + 50, 12, 31);
 
-    final picked = await showDatePicker(
+    final picked = await showAccessibleDatePicker(
       context: context,
       initialDate: initial.isBefore(firstDate) ? firstDate : initial,
       firstDate: firstDate,
