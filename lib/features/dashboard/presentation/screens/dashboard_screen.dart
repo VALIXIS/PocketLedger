@@ -7,6 +7,7 @@ import '../../../analytics/presentation/screens/analytics_screen.dart';
 import '../../../budgets/presentation/screens/budget_list_screen.dart';
 import '../../../goals/presentation/screens/financial_goals_screen.dart';
 import '../../../recurring/presentation/screens/recurring_manager_screen.dart';
+import '../../../search/presentation/screens/search_screen.dart';
 import '../../../settings/presentation/providers/settings_provider.dart';
 import '../../../settings/presentation/screens/settings_screen.dart';
 import '../../../transactions/domain/models/transaction_type.dart';
@@ -26,6 +27,15 @@ class DashboardScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('PocketLedger'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.search_rounded),
+            tooltip: 'Search & Filter',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const SearchScreen()),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(
               Icons.account_balance_wallet_outlined,
