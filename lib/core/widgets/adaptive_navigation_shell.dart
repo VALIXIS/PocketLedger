@@ -8,40 +8,26 @@ import '../theme/app_theme.dart';
 import '../theme/responsive_breakpoints.dart';
 import 'tablet_navigation_rail.dart';
 
-export 'adaptive_navigation_shell.dart';
-
-/// The flagship five-tab main navigation shell for PocketLedger.
+/// The flagship adaptive navigation shell for PocketLedger.
 ///
-/// Features adaptive layout switching between a bottom [NavigationBar] (phone < 600px)
-/// and a side [TabletNavigationRail] (tablet/desktop >= 600px), animated directional
-/// slide and fade page transitions, page state preservation, accessible navigation labels,
-/// and subtle haptic feedback on tab changes.
-class MainNavigationShell extends StatefulWidget {
-  /// The initial tab index to display (0: Dashboard, 1: Analytics, 2: Plan,
-  /// 3: Search, 4: AI Assistant). Defaults to 0.
+/// Automatically switches between a bottom [NavigationBar] (phone < 600px)
+/// and a side [TabletNavigationRail] (tablet/desktop >= 600px) based on available
+/// logical width, while preserving tab state, directional slide/fade transitions,
+/// back navigation semantics, and haptic feedback.
+class AdaptiveNavigationShell extends StatefulWidget {
   final int initialIndex;
-
-  /// Optional custom page list for testing, custom routing, or previews.
-  /// If null, default feature screens and placeholders are used.
   final List<Widget>? screens;
-
-  /// Optional callback invoked whenever the selected tab changes.
   final ValueChanged<int>? onTabChanged;
-
   final bool _useAllPlaceholders;
 
-  /// Standard constructor integrating real feature screens where available
-  /// and minimal placeholders for upcoming features (Plan, Search).
-  const MainNavigationShell({
+  const AdaptiveNavigationShell({
     super.key,
     this.initialIndex = 0,
     this.screens,
     this.onTabChanged,
   }) : _useAllPlaceholders = false;
 
-  /// Factory constructor configuring lightweight standalone placeholder screens
-  /// for all five tabs. Ideal for unit/widget tests and isolated UI previews.
-  const MainNavigationShell.withPlaceholders({
+  const AdaptiveNavigationShell.withPlaceholders({
     super.key,
     this.initialIndex = 0,
     this.onTabChanged,
@@ -49,11 +35,11 @@ class MainNavigationShell extends StatefulWidget {
        _useAllPlaceholders = true;
 
   @override
-  State<MainNavigationShell> createState() => MainNavigationShellState();
+  State<AdaptiveNavigationShell> createState() =>
+      AdaptiveNavigationShellState();
 }
 
-/// State for [MainNavigationShell], exposing [currentIndex] for integration.
-class MainNavigationShellState extends State<MainNavigationShell>
+class AdaptiveNavigationShellState extends State<AdaptiveNavigationShell>
     with SingleTickerProviderStateMixin {
   static const int _destinationCount = 5;
 
@@ -111,27 +97,27 @@ class MainNavigationShellState extends State<MainNavigationShell>
   List<Widget> _buildScreens() {
     if (widget._useAllPlaceholders) {
       return const [
-        _NavigationPlaceholderScreen(
+        _AdaptiveNavigationPlaceholder(
           title: 'Dashboard',
           subtitle: 'Your financial overview',
           icon: Icons.dashboard_outlined,
         ),
-        _NavigationPlaceholderScreen(
+        _AdaptiveNavigationPlaceholder(
           title: 'Analytics',
           subtitle: 'Understand your spending and trends',
           icon: Icons.analytics_outlined,
         ),
-        _NavigationPlaceholderScreen(
+        _AdaptiveNavigationPlaceholder(
           title: 'Plan',
           subtitle: 'Plan your upcoming finances',
           icon: Icons.event_note_outlined,
         ),
-        _NavigationPlaceholderScreen(
+        _AdaptiveNavigationPlaceholder(
           title: 'Search',
           subtitle: 'Find transactions, accounts, and insights',
           icon: Icons.search,
         ),
-        _NavigationPlaceholderScreen(
+        _AdaptiveNavigationPlaceholder(
           title: 'AI Assistant',
           subtitle: 'Your intelligent financial assistant',
           icon: Icons.auto_awesome_outlined,
@@ -143,12 +129,12 @@ class MainNavigationShellState extends State<MainNavigationShell>
     return const [
       DashboardScreen(),
       AnalyticsScreen(),
-      _NavigationPlaceholderScreen(
+      _AdaptiveNavigationPlaceholder(
         title: 'Plan',
         subtitle: 'Plan your upcoming finances',
         icon: Icons.event_note_outlined,
       ),
-      _NavigationPlaceholderScreen(
+      _AdaptiveNavigationPlaceholder(
         title: 'Search',
         subtitle: 'Find transactions, accounts, and insights',
         icon: Icons.search,
@@ -258,7 +244,6 @@ class MainNavigationShellState extends State<MainNavigationShell>
       ],
     );
 
-    // Android back navigation: Non-dashboard tabs return to Dashboard first.
     return PopScope(
       canPop: _currentIndex == 0,
       onPopInvokedWithResult: (bool didPop, dynamic result) {
@@ -288,6 +273,7 @@ class MainNavigationShellState extends State<MainNavigationShell>
             );
           }
 
+          // Phone layout with bottom NavigationBar
           return Scaffold(
             body: pageStack,
             bottomNavigationBar: NavigationBar(
@@ -333,15 +319,13 @@ class MainNavigationShellState extends State<MainNavigationShell>
   }
 }
 
-/// Minimal internal placeholder screen used for navigation tabs prior to their
-/// dedicated sprint implementation.
-class _NavigationPlaceholderScreen extends StatelessWidget {
+class _AdaptiveNavigationPlaceholder extends StatelessWidget {
   final String title;
   final String subtitle;
   final IconData icon;
   final bool isAiSpecial;
 
-  const _NavigationPlaceholderScreen({
+  const _AdaptiveNavigationPlaceholder({
     required this.title,
     required this.subtitle,
     required this.icon,

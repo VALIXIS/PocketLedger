@@ -68,8 +68,7 @@ class PrimaryButton extends StatelessWidget {
             )
           : Row(
               key: const ValueKey('content'),
-              mainAxisSize:
-                  isFullWidth ? MainAxisSize.max : MainAxisSize.min,
+              mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (icon != null) ...[
@@ -81,7 +80,8 @@ class PrimaryButton extends StatelessWidget {
                     label,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.labelLarge?.copyWith(
+                    style:
+                        theme.textTheme.labelLarge?.copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: textColor,
@@ -108,11 +108,13 @@ class PrimaryButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: bgColor,
         foregroundColor: textColor,
-        disabledBackgroundColor: disabledBackgroundColor ??
+        disabledBackgroundColor:
+            disabledBackgroundColor ??
             (theme.brightness == Brightness.dark
                 ? AppColors.darkSurfaceVariant
                 : Colors.grey.shade300),
-        disabledForegroundColor: disabledTextColor ??
+        disabledForegroundColor:
+            disabledTextColor ??
             (theme.brightness == Brightness.dark
                 ? AppColors.darkTextDisabled
                 : Colors.grey.shade500),
@@ -120,7 +122,8 @@ class PrimaryButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),
         ),
-        padding: padding ??
+        padding:
+            padding ??
             const EdgeInsets.symmetric(horizontal: AppSpacing.space16),
         minimumSize: Size(resolvedWidth ?? 64.0, height),
       ),
@@ -131,11 +134,7 @@ class PrimaryButton extends StatelessWidget {
       button: true,
       enabled: isInteractive,
       label: semanticLabel ?? label,
-      child: SizedBox(
-        width: resolvedWidth,
-        height: height,
-        child: button,
-      ),
+      child: SizedBox(width: resolvedWidth, height: height, child: button),
     );
   }
 }
