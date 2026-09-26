@@ -38,45 +38,40 @@ class AnalyticsScreen extends ConsumerWidget {
       ),
       body: SafeArea(
         child: transactionState.when(
-          loading:
-              () => const Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 40.0),
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-          error:
-              (err, _) => Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: CustomCard(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.error_outline,
-                          color: Colors.red,
-                          size: 48,
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Error loading analytics data',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '$err',
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+          loading: () => const Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 40.0),
+              child: CircularProgressIndicator(),
+            ),
+          ),
+          error: (err, _) => Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: CustomCard(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 48,
                     ),
-                  ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Error loading analytics data',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '$err',
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
               ),
+            ),
+          ),
           data: (transactions) {
             if (transactions.isEmpty) {
               return _buildGlobalEmptyState(context);
@@ -138,7 +133,9 @@ class AnalyticsScreen extends ConsumerWidget {
     return CustomCard(
       color: isDark
           ? const Color(0xFF1E262B)
-          : Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.4),
+          : Theme.of(
+              context,
+            ).colorScheme.primaryContainer.withValues(alpha: 0.4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -170,7 +167,9 @@ class AnalyticsScreen extends ConsumerWidget {
                   context,
                   title: 'Savings Rate',
                   amount: '${report.savingsRate.toStringAsFixed(1)}%',
-                  color: report.savingsRate >= 0 ? Colors.indigo : Colors.orange,
+                  color: report.savingsRate >= 0
+                      ? Colors.indigo
+                      : Colors.orange,
                   icon: Icons.savings_outlined,
                 ),
               ),
@@ -333,10 +332,9 @@ class AnalyticsScreen extends ConsumerWidget {
             separatorBuilder: (_, __) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
               final merchant = merchants[index];
-              final ratio =
-                  maxSpending > 0
-                      ? (merchant.totalSpending / maxSpending).clamp(0.05, 1.0)
-                      : 0.0;
+              final ratio = maxSpending > 0
+                  ? (merchant.totalSpending / maxSpending).clamp(0.05, 1.0)
+                  : 0.0;
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -442,11 +440,7 @@ class AnalyticsScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Icon(
-                Icons.speed_outlined,
-                size: 48,
-                color: Colors.grey,
-              ),
+              const Icon(Icons.speed_outlined, size: 48, color: Colors.grey),
               const SizedBox(height: 8),
               const Text(
                 'No Category Velocity Data',
@@ -494,10 +488,9 @@ class AnalyticsScreen extends ConsumerWidget {
             separatorBuilder: (_, __) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
               final vel = velocities[index];
-              final ratio =
-                  maxVelocity > 0
-                      ? (vel.dailyVelocity / maxVelocity).clamp(0.05, 1.0)
-                      : 0.0;
+              final ratio = maxVelocity > 0
+                  ? (vel.dailyVelocity / maxVelocity).clamp(0.05, 1.0)
+                  : 0.0;
               final catIcon = CategoryUiHelper.getIcon(vel.category);
               final catColor = CategoryUiHelper.getColor(vel.category);
 
@@ -586,14 +579,16 @@ class AnalyticsScreen extends ConsumerWidget {
               Icon(
                 Icons.analytics_outlined,
                 size: 72,
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.6),
               ),
               const SizedBox(height: 16),
               Text(
                 'No Analytics Data Available',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               const Text(
