@@ -23,7 +23,9 @@ class TopMerchant {
 
   @override
   int get hashCode =>
-      merchantName.hashCode ^ totalSpending.hashCode ^ transactionCount.hashCode;
+      merchantName.hashCode ^
+      totalSpending.hashCode ^
+      transactionCount.hashCode;
 
   @override
   String toString() {
