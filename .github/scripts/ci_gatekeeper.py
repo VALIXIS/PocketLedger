@@ -93,7 +93,7 @@ def run_flutter_checks():
         return issues
 
     # Flutter analyze
-    res = subprocess.run(['flutter', 'analyze', '--no-fatal-infos'], capture_output=True, text=True, shell=True)
+    res = subprocess.run(['flutter', 'analyze', '--no-fatal-infos'], capture_output=True, text=True)
     if res.returncode != 0:
         raw = res.stdout or res.stderr
         diag_lines = [l.strip() for l in raw.splitlines() if re.search(r'\b(?:error|warning|info)\s+-\s+', l)]
@@ -107,7 +107,7 @@ def run_flutter_checks():
 
     # Flutter test
     if (REPO_ROOT / 'test').exists() and any((REPO_ROOT / 'test').glob('*_test.dart')):
-        t_res = subprocess.run(['flutter', 'test'], capture_output=True, text=True, shell=True)
+        t_res = subprocess.run(['flutter', 'test'], capture_output=True, text=True)
         if t_res.returncode != 0:
             issues.append({
                 "type": "TEST_FAILURE",

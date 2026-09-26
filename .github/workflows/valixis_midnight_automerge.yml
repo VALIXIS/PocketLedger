@@ -30,6 +30,8 @@ jobs:
       - name: Run Midnight Auto-Merge & Conflict Prompt Engine
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           python .github/scripts/automerge_bot.py
 
