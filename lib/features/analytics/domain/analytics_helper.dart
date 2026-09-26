@@ -103,8 +103,9 @@ class AnalyticsHelper {
 
     for (final tx in transactions) {
       if (tx.type == TransactionType.expense) {
-        final categoryKey =
-            tx.category.trim().isEmpty ? 'Uncategorized' : tx.category.trim();
+        final categoryKey = tx.category.trim().isEmpty
+            ? 'Uncategorized'
+            : tx.category.trim();
         centsMap[categoryKey] = (centsMap[categoryKey] ?? 0) + tx.amountInCents;
       }
     }
@@ -130,8 +131,9 @@ class AnalyticsHelper {
     for (final tx in transactions) {
       if (tx.type == TransactionType.expense) {
         totalExpenseCents += tx.amountInCents;
-        final categoryKey =
-            tx.category.trim().isEmpty ? 'Uncategorized' : tx.category.trim();
+        final categoryKey = tx.category.trim().isEmpty
+            ? 'Uncategorized'
+            : tx.category.trim();
         centsMap[categoryKey] = (centsMap[categoryKey] ?? 0) + tx.amountInCents;
       }
     }
@@ -171,21 +173,20 @@ class AnalyticsHelper {
       }
     }
 
-    final List<MonthlyTrend> trends =
-        grouped.values.map((totals) {
-          final income = _sanitizeDouble(totals.incomeCents / 100.0);
-          final expenses = _sanitizeDouble(totals.expenseCents / 100.0);
-          final net = _sanitizeDouble(
-            (totals.incomeCents - totals.expenseCents) / 100.0,
-          );
-          return MonthlyTrend(
-            year: totals.year,
-            month: totals.month,
-            totalIncome: income,
-            totalExpenses: expenses,
-            netCashflow: net,
-          );
-        }).toList();
+    final List<MonthlyTrend> trends = grouped.values.map((totals) {
+      final income = _sanitizeDouble(totals.incomeCents / 100.0);
+      final expenses = _sanitizeDouble(totals.expenseCents / 100.0);
+      final net = _sanitizeDouble(
+        (totals.incomeCents - totals.expenseCents) / 100.0,
+      );
+      return MonthlyTrend(
+        year: totals.year,
+        month: totals.month,
+        totalIncome: income,
+        totalExpenses: expenses,
+        netCashflow: net,
+      );
+    }).toList();
 
     trends.sort((a, b) {
       if (a.year != b.year) {
@@ -211,12 +212,11 @@ class AnalyticsHelper {
 
     for (final tx in transactions) {
       if (tx.type == TransactionType.expense) {
-        final String rawLabel =
-            tx.note.trim().isNotEmpty
-                ? tx.note.trim()
-                : (tx.category.trim().isNotEmpty
-                    ? tx.category.trim()
-                    : 'Uncategorized');
+        final String rawLabel = tx.note.trim().isNotEmpty
+            ? tx.note.trim()
+            : (tx.category.trim().isNotEmpty
+                  ? tx.category.trim()
+                  : 'Uncategorized');
 
         final label =
             rawLabel.substring(0, 1).toUpperCase() + rawLabel.substring(1);
@@ -231,14 +231,13 @@ class AnalyticsHelper {
       }
     }
 
-    final list =
-        map.values.map((acc) {
-          return TopMerchant(
-            merchantName: acc.merchantName,
-            totalSpending: _sanitizeDouble(acc.totalCents / 100.0),
-            transactionCount: acc.count,
-          );
-        }).toList();
+    final list = map.values.map((acc) {
+      return TopMerchant(
+        merchantName: acc.merchantName,
+        totalSpending: _sanitizeDouble(acc.totalCents / 100.0),
+        transactionCount: acc.count,
+      );
+    }).toList();
 
     list.sort((a, b) {
       final comp = b.totalSpending.compareTo(a.totalSpending);
@@ -253,8 +252,9 @@ class AnalyticsHelper {
   static List<CategoryVelocity> calculateCategoryVelocities(
     List<Transaction> transactions,
   ) {
-    final expenses =
-        transactions.where((tx) => tx.type == TransactionType.expense).toList();
+    final expenses = transactions
+        .where((tx) => tx.type == TransactionType.expense)
+        .toList();
     if (expenses.isEmpty) return const [];
 
     final periodDays = calculatePeriodDays(expenses);
@@ -263,8 +263,9 @@ class AnalyticsHelper {
     final Map<String, _CategoryAccumulator> map = {};
 
     for (final tx in expenses) {
-      final rawCat =
-          tx.category.trim().isEmpty ? 'Uncategorized' : tx.category.trim();
+      final rawCat = tx.category.trim().isEmpty
+          ? 'Uncategorized'
+          : tx.category.trim();
 
       final acc = map.putIfAbsent(
         rawCat,
@@ -275,23 +276,22 @@ class AnalyticsHelper {
       acc.count += 1;
     }
 
-    final list =
-        map.values.map((acc) {
-          final total = _sanitizeDouble(acc.totalCents / 100.0);
-          final velocity = _sanitizeDouble(total / safeDays);
-          final formattedName =
-              acc.category.substring(0, 1).toUpperCase() +
-              acc.category.substring(1).replaceAll('_', ' ');
+    final list = map.values.map((acc) {
+      final total = _sanitizeDouble(acc.totalCents / 100.0);
+      final velocity = _sanitizeDouble(total / safeDays);
+      final formattedName =
+          acc.category.substring(0, 1).toUpperCase() +
+          acc.category.substring(1).replaceAll('_', ' ');
 
-          return CategoryVelocity(
-            category: acc.category,
-            categoryName: formattedName,
-            totalSpending: total,
-            transactionCount: acc.count,
-            dailyVelocity: velocity,
-            periodDays: safeDays,
-          );
-        }).toList();
+      return CategoryVelocity(
+        category: acc.category,
+        categoryName: formattedName,
+        totalSpending: total,
+        transactionCount: acc.count,
+        dailyVelocity: velocity,
+        periodDays: safeDays,
+      );
+    }).toList();
 
     list.sort((a, b) => b.dailyVelocity.compareTo(a.dailyVelocity));
 
@@ -368,14 +368,9 @@ class AnalyticsHelper {
       return 0.0;
     }
 
-    final days =
-        (customPeriodDays != null && customPeriodDays > 0)
-            ? customPeriodDays
-            : calculatePeriodDays(
-              filtered,
-              startDate: startDate,
-              endDate: endDate,
-            );
+    final days = (customPeriodDays != null && customPeriodDays > 0)
+        ? customPeriodDays
+        : calculatePeriodDays(filtered, startDate: startDate, endDate: endDate);
 
     if (days <= 0) {
       return 0.0;
