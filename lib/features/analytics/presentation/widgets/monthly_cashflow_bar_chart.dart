@@ -31,8 +31,9 @@ class _MonthlyCashflowBarChartState
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Filter out empty trends and limit to latest 6 months for clean bar spacing
-    final displayTrends =
-        trends.isEmpty ? <dynamic>[] : trends.take(6).toList();
+    final displayTrends = trends.isEmpty
+        ? <dynamic>[]
+        : trends.take(6).toList();
 
     if (displayTrends.isEmpty) {
       return _buildEmptyState(context);
@@ -79,7 +80,8 @@ class _MonthlyCashflowBarChartState
                     },
                     tooltipMargin: 8,
                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                      if (groupIndex < 0 || groupIndex >= displayTrends.length) {
+                      if (groupIndex < 0 ||
+                          groupIndex >= displayTrends.length) {
                         return null;
                       }
                       final trend = displayTrends[groupIndex];
@@ -103,21 +105,19 @@ class _MonthlyCashflowBarChartState
                       );
                     },
                   ),
-                  touchCallback: (
-                    FlTouchEvent event,
-                    BarTouchResponse? response,
-                  ) {
-                    setState(() {
-                      if (!event.isInterestedForInteractions ||
-                          response == null ||
-                          response.spot == null) {
-                        _touchedGroupIndex = null;
-                        return;
-                      }
-                      _touchedGroupIndex =
-                          response.spot!.touchedBarGroupIndex;
-                    });
-                  },
+                  touchCallback:
+                      (FlTouchEvent event, BarTouchResponse? response) {
+                        setState(() {
+                          if (!event.isInterestedForInteractions ||
+                              response == null ||
+                              response.spot == null) {
+                            _touchedGroupIndex = null;
+                            return;
+                          }
+                          _touchedGroupIndex =
+                              response.spot!.touchedBarGroupIndex;
+                        });
+                      },
                 ),
                 titlesData: FlTitlesData(
                   show: true,
@@ -159,9 +159,9 @@ class _MonthlyCashflowBarChartState
                         final index = value.toInt();
                         if (index >= 0 && index < displayTrends.length) {
                           final trend = displayTrends[index];
-                          final label = DateFormat('MMM').format(
-                            DateTime(trend.year, trend.month),
-                          );
+                          final label = DateFormat(
+                            'MMM',
+                          ).format(DateTime(trend.year, trend.month));
                           return Padding(
                             padding: const EdgeInsets.only(top: 6.0),
                             child: Text(
@@ -247,10 +247,7 @@ class _MonthlyCashflowBarChartState
           ),
         ),
         const SizedBox(width: 4),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 11, color: Colors.grey),
-        ),
+        Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
       ],
     );
   }

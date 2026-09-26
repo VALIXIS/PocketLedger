@@ -30,9 +30,8 @@ class _CategorySpendingPieChartState
     final currency = ref.watch(settingsProvider).currency;
 
     // Filter out categories with zero or negative spending
-    final entries =
-        spendingMap.entries.where((e) => e.value > 0).toList()
-          ..sort((a, b) => b.value.compareTo(a.value)); // Highest first
+    final entries = spendingMap.entries.where((e) => e.value > 0).toList()
+      ..sort((a, b) => b.value.compareTo(a.value)); // Highest first
 
     final totalExpenses = entries.fold<double>(
       0.0,
@@ -71,35 +70,35 @@ class _CategorySpendingPieChartState
                 PieChart(
                   PieChartData(
                     pieTouchData: PieTouchData(
-                      touchCallback: (
-                        FlTouchEvent event,
-                        PieTouchResponse? pieTouchResponse,
-                      ) {
-                        if (!event.isInterestedForInteractions ||
-                            pieTouchResponse == null ||
-                            pieTouchResponse.touchedSection == null) {
-                          return;
-                        }
+                      touchCallback:
+                          (
+                            FlTouchEvent event,
+                            PieTouchResponse? pieTouchResponse,
+                          ) {
+                            if (!event.isInterestedForInteractions ||
+                                pieTouchResponse == null ||
+                                pieTouchResponse.touchedSection == null) {
+                              return;
+                            }
 
-                        final index =
-                            pieTouchResponse
+                            final index = pieTouchResponse
                                 .touchedSection!
                                 .touchedSectionIndex;
 
-                        if (event is FlTapUpEvent) {
-                          setState(() {
-                            if (index >= 0 && index < entries.length) {
-                              if (_touchedIndex == index) {
-                                _touchedIndex = null; // Clear selection
-                              } else {
-                                _touchedIndex = index; // Select new slice
-                              }
-                            } else {
-                              _touchedIndex = null;
+                            if (event is FlTapUpEvent) {
+                              setState(() {
+                                if (index >= 0 && index < entries.length) {
+                                  if (_touchedIndex == index) {
+                                    _touchedIndex = null; // Clear selection
+                                  } else {
+                                    _touchedIndex = index; // Select new slice
+                                  }
+                                } else {
+                                  _touchedIndex = null;
+                                }
+                              });
                             }
-                          });
-                        }
-                      },
+                          },
                     ),
                     borderData: FlBorderData(show: false),
                     sectionsSpace: 2,
@@ -130,7 +129,12 @@ class _CategorySpendingPieChartState
                 ),
 
                 // Center Hole Info Display
-                _buildCenterHoleContent(context, entries, totalExpenses, currency),
+                _buildCenterHoleContent(
+                  context,
+                  entries,
+                  totalExpenses,
+                  currency,
+                ),
               ],
             ),
           ),
@@ -204,27 +208,23 @@ class _CategorySpendingPieChartState
     double totalExpenses,
     String currency,
   ) {
-    final isSelected =
-        _touchedIndex != null && _touchedIndex! < entries.length;
+    final isSelected = _touchedIndex != null && _touchedIndex! < entries.length;
 
     final categoryKey = isSelected ? entries[_touchedIndex!].key : 'Total';
     final amount = isSelected ? entries[_touchedIndex!].value : totalExpenses;
     final pct = isSelected ? (amount / totalExpenses) * 100.0 : 100.0;
 
-    final formattedName =
-        isSelected
-            ? (categoryKey.substring(0, 1).toUpperCase() +
-                categoryKey.substring(1).replaceAll('_', ' '))
-            : 'All Expenses';
+    final formattedName = isSelected
+        ? (categoryKey.substring(0, 1).toUpperCase() +
+              categoryKey.substring(1).replaceAll('_', ' '))
+        : 'All Expenses';
 
-    final catIcon =
-        isSelected
-            ? CategoryUiHelper.getIcon(categoryKey)
-            : Icons.donut_small_outlined;
-    final catColor =
-        isSelected
-            ? CategoryUiHelper.getColor(categoryKey)
-            : Theme.of(context).colorScheme.primary;
+    final catIcon = isSelected
+        ? CategoryUiHelper.getIcon(categoryKey)
+        : Icons.donut_small_outlined;
+    final catColor = isSelected
+        ? CategoryUiHelper.getColor(categoryKey)
+        : Theme.of(context).colorScheme.primary;
 
     return Container(
       padding: const EdgeInsets.all(12.0),
