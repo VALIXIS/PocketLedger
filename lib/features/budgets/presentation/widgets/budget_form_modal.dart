@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../../../core/accessibility/accessible_date_picker.dart';
 import '../../domain/entities/budget.dart';
 import '../providers/budget_list_notifier.dart';
 
@@ -58,7 +59,7 @@ class _BudgetFormModalState extends ConsumerState<BudgetFormModal> {
   }
 
   Future<void> _pickStartDate() async {
-    final picked = await showDatePicker(
+    final picked = await showAccessibleDatePicker(
       context: context,
       initialDate: _startDate,
       firstDate: DateTime(2020),
