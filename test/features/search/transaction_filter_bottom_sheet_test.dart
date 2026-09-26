@@ -31,7 +31,7 @@ class MockTransactionRepository implements TransactionRepository {
 class MockCategoryRepository implements CategoryRepository {
   final List<Category> _categories;
   MockCategoryRepository([List<Category>? categories])
-      : _categories = categories ?? Category.defaultCategories;
+    : _categories = categories ?? Category.defaultCategories;
 
   @override
   Future<List<Category>> getCategories() async => List.from(_categories);

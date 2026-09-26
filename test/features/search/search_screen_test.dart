@@ -12,6 +12,7 @@ import 'package:pocketledger/features/transactions/domain/models/transaction.dar
 import 'package:pocketledger/features/transactions/domain/models/transaction_type.dart';
 import 'package:pocketledger/features/transactions/domain/repositories/transaction_repository.dart';
 import 'package:pocketledger/features/transactions/presentation/providers/transaction_providers.dart';
+import 'package:pocketledger/features/transactions/presentation/screens/transaction_form_screen.dart';
 
 class MockTransactionRepository implements TransactionRepository {
   final List<Transaction> _list;
@@ -284,6 +285,31 @@ void main() {
       expect(find.byType(SearchEmptyState), findsOneWidget);
       expect(find.text('No transactions found'), findsOneWidget);
       expect(find.byType(SearchTransactionCard), findsNothing);
+    });
+
+    testWidgets('11. Tooltips and accessibility semantics are present', (
+      tester,
+    ) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      expect(find.byTooltip('Filter Options'), findsOneWidget);
+      expect(find.byTooltip('Sort Results'), findsOneWidget);
+    });
+
+    testWidgets('12. Tapping on a transaction card triggers edit action', (
+      tester,
+    ) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      // Tap on Morning Coffee card
+      await tester.tap(find.text('Morning Coffee'));
+      await tester.pumpAndSettle();
+
+      // Transaction form screen opens with edit header
+      expect(find.byType(TransactionFormScreen), findsOneWidget);
+      expect(find.text('Edit Transaction'), findsOneWidget);
     });
   });
 }
