@@ -1,0 +1,5 @@
+What's New in this version:
+- New: ci: add multi-slot redundant schedule for guaranteed midnight auto-merge
+- Feature: pass argument list directly to gh CLI and add REST API fallback
+- Bug Fix: remove unused dart:ui import in flagship_components_test
+- UI: test(qa): Day 6 — Master QA Matrix and Full System Regression Suite

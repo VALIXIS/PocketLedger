@@ -1,0 +1,9 @@
+We regularly update the app to deliver the best experience for you. In this release:
+
+- New: ci: add multi-slot redundant schedule for guaranteed midnight auto-merge
+- Feature: pass argument list directly to gh CLI and add REST API fallback
+- Bug Fix: remove unused dart:ui import in flagship_components_test
+- UI: test(qa): Day 6 — Master QA Matrix and Full System Regression Suite
+
+- Overall performance optimizations and minor bug fixes.
+Thank you for using our app! Send feedback to support@valixis.com.
